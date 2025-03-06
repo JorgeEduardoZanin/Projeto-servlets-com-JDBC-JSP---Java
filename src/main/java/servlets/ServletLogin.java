@@ -50,7 +50,9 @@ public class ServletLogin extends HttpServlet {
                 return;
             }
 
-            ModelLogin modelLogin = new ModelLogin(login, senha);
+            ModelLogin modelLogin = new ModelLogin();
+            modelLogin.setLogin(login);
+            modelLogin.setSenha(senha);
             
             if( !loginRepository.login(modelLogin)) {
             	 RequestDispatcher redirecionar = request.getRequestDispatcher("/index.jsp");
@@ -68,7 +70,7 @@ public class ServletLogin extends HttpServlet {
             
         } catch (Exception e) {
             e.printStackTrace();
-         	 RequestDispatcher redirecionar = request.getRequestDispatcher("/erro.jsp");
+         	 RequestDispatcher redirecionar = request.getRequestDispatcher("principal/erro.jsp");
              request.setAttribute("msg", e.getMessage());
              redirecionar.forward(request, response);
         }

@@ -13,7 +13,7 @@
   <servlet-mapping>
     <servlet-name>ServletLogin</servlet-name>
     <url-pattern>/ServletLogin</url-pattern>
-      <url-pattern>/principal/ServletLogin</url-pattern>
+    <url-pattern>/principal/ServletLogin</url-pattern>
   </servlet-mapping>
   <filter>
     <display-name>FilterAutenticacao</display-name>
@@ -24,4 +24,24 @@
     <filter-name>FilterAutenticacao</filter-name>
     <url-pattern>/principal/*</url-pattern>
   </filter-mapping>
+  <servlet>
+    <description></description>
+    <display-name>ServletUsuarioController</display-name>
+    <servlet-name>ServletUsuarioController</servlet-name>
+    <servlet-class>servlets.ServletUsuarioController</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ServletUsuarioController</servlet-name>
+    <url-pattern>/ServletUsuarioController</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>ServletUserController</display-name>
+    <servlet-name>ServletUserController</servlet-name>
+    <servlet-class>servlets.ServletUsuarioController</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ServletUserController</servlet-name>
+    <url-pattern>/ServletUserController</url-pattern>
+  </servlet-mapping>
 </web-app>
