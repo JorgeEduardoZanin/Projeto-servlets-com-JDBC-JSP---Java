@@ -97,5 +97,16 @@ public class daoUserRepository {
 
 		return false;
 	}
-
+	
+	public void delete(long id) throws SQLException {
+		
+		String sql = "DELETE FROM model_login WHERE id =(?)";
+		PreparedStatement sttm = connection.prepareStatement(sql);
+		sttm.setLong(1, id);
+		sttm.executeUpdate();
+		
+		
+		connection.commit();
+		
+	}
 }

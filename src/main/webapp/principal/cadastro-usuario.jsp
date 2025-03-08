@@ -2,9 +2,7 @@
 	pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html>
 <html lang="en">
-<link
-	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
-	rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 
 <jsp:include page="head.jsp"></jsp:include>
 
@@ -40,63 +38,66 @@
 														<h4 class="sub-title">Dados do usuário</h4>
 														<form class="form-material"
 															action="<%=request.getContextPath()%>/ServletUsuarioController"
-															method="post">
-															<div class="form-group form-default">
+															method="post" id="formUser">
+															
+															<input type="hidden" name="acao" id="acao" value="">
+															<div class="form-group form-default form-static-label">
 																<input type="text" name="id" id="id"
 																	class="form-control" readonly="readonly"
-																	value="${modelLogin.id}"> <span
-																	class="form-bar"></span> <label class="float-label">ID</label>
+																	value="${modelLogin.id}">
+																<span class="form-bar"></span>
+																<label class="float-label">ID</label>
 															</div>
-															<div class="form-group form-default">
+															<div class="form-group form-default form-static-label">
 																<input type="text" name="name" id="name"
 																	class="form-control" required="required"
-																	value="${modelLogin.name}"> <span
-																	class="form-bar"></span> <label class="float-label">Nome</label>
+																	value="${modelLogin.name}">
+																<span class="form-bar"></span>
+																<label class="float-label">Nome</label>
 															</div>
-															<div class="form-group form-default">
+															<div class="form-group form-default form-static-label">
 																<input type="email" name="email" id="email"
 																	class="form-control" required="required"
-																	value="${modelLogin.email}"> <span
-																	class="form-bar"></span> <label class="float-label">E-mail</label>
+																	value="${modelLogin.email}">
+																<span class="form-bar"></span>
+																<label class="float-label">E-mail</label>
 															</div>
-															<div class="form-group form-default">
+															<div class="form-group form-default form-static-label">
 																<input type="text" name="login" id="login"
 																	class="form-control" required="required"
-																	value="${modelLogin.login}"> <span
-																	class="form-bar"></span> <label class="float-label">Login</label>
+																	value="${modelLogin.login}">
+																<span class="form-bar"></span>
+																<label class="float-label">Login</label>
 															</div>
-															<div class="form-group form-default">
+															<div class="form-group form-default form-static-label">
 																<input type="password" name="senha" id="senha"
 																	class="form-control" required="required"
-																	value="${modelLogin.senha}"> <span
-																	class="form-bar"></span> <label class="float-label">Senha</label>
-																<i id="eye-icon" class="fa fa-eye"
-																	onclick="togglePassword()"></i>
+																	value="${modelLogin.senha}">
+																<span class="form-bar"></span>
+																<label class="float-label">Senha</label>
+																<i id="eye-icon" class="fa fa-eye" onclick="togglePassword()"></i>
 															</div>
 
-
-															<button
-																class="btn waves-effect waves-light btn-primary btn-outline-primary">
-																<i class="icofont icofont-user-alt-3"></i>Enviar
+															<button class="btn waves-effect waves-light btn-primary btn-outline-primary" 
+																type="button" onclick="limparForm()">
+																<i class="icofont icofont-user-alt-3"></i>Limpar
 															</button>
-															<button
-																class="btn waves-effect waves-light btn-inverse btn-outline-inverse">
-																<i class="icofont icofont-exchange"></i>Editar
+															<button class="btn waves-effect waves-light btn-inverse btn-outline-inverse">
+																<i class="icofont icofont-exchange"></i>Salvar
 															</button>
-															<button
-																class="btn waves-effect waves-light btn-danger btn-outline-danger">
+															<button class="btn waves-effect waves-light btn-danger btn-outline-danger" type="button" onclick="deletar()">
 																<i class="icofont icofont-eye-alt"></i>Excluir
 															</button>
-														
 														</form>
-
 													</div>
 												</div>
 											</div>
 										</div>
+										<!-- Container unificado para as mensagens -->
 										<div class="msg-container">
-										<span id="msg" class="msgs">${msg}</span>
-										<span id="msgLoginUnico" class="msgs">${msgLoginUnico}</span>
+											<span id="msg" class="msgs">${msg}</span>
+											<span id="msgLoginUnico" class="msgs">${msgLoginUnico}</span>
+											<span id="msgDel" class="msgs">${msgDel}</span>
 										</div>
 									</div>
 									<!-- Page-body end -->
@@ -111,38 +112,30 @@
 	</div>
 
 	<style>
-	
 	.msg-container {
-    position: relative; 
+		display: flex;
+		align-items: center; /* alinha verticalmente */
+		gap: 10px; /* espaço entre as mensagens */
 	}
-	
 	.msgs {
-    position: absolute; 
-    top: 0;
-    left: 0;
-    visibility: hidden; 
+		/* Remove a margem que empurrava as mensagens para baixo */
+		margin: 0;
+		padding: 10px;
+		border-radius: 5px;
+		font-size: 20px;
+		transition: opacity 3s ease-out;
+		opacity: 1;
+		visibility: hidden;
 	}
-	
 	#msg {
-			 color: green;
-            font-size: 20px;
-            padding: 10px;
-            border-radius: 5px;
-            margin-top: 20px;
-            transition: opacity 3s ease-out; /
-            opacity: 1;
+		color: green;
 	}
-	
-	#msgLoginUnico{
-			color: red;
-            font-size: 20px;
-            padding: 10px;
-            border-radius: 5px;
-            margin-top: 20px;
-            transition: opacity 3s ease-out; /
-            opacity: 1;
+	/* Tanto a mensagem de login único quanto a de exclusão ficam em vermelho */
+	#msgLoginUnico,
+	#msgDel {
+		color: red;
 	}
-	</style>
+</style>
 
 	<jsp:include page="javascript.jsp"></jsp:include>
 	<script>
@@ -161,62 +154,62 @@
 			}
 		}
 		
-		 function showMessage() {
-	            var msgElement = document.getElementById('msg');
-	            msgElement.style.display = 'block';
+		function showMessage(id) {
+			var msgElement = document.getElementById(id);
+			msgElement.style.display = 'block';
+			msgElement.style.visibility = 'visible';
+			
+			setTimeout(function() {
+				msgElement.style.opacity = 0;
+			}, 5000);
+		}
 
-	         
-	            setTimeout(function() {
-	                msgElement.style.opacity = 0; 
-	            }, 5000);  
-	        }
+		// Função para disparar todas as mensagens após o carregamento da página
+		window.onload = function() {
+			showMessage('msg');
+			showMessage('msgLoginUnico');
+			showMessage('msgDel');
+		};
+		
+		function exibirMensagem(tipo) {
+			document.getElementById("msg").style.visibility = "hidden";
+			document.getElementById("msgLoginUnico").style.visibility = "hidden";
+			document.getElementById("msgDel").style.visibility = "hidden";
 
-	        window.onload = showMessage;
-	        
-	        
-	        function showMessageLoginUnico() {
-	            var msgElement = document.getElementById('msgLoginUnico');
-	            msgElement.style.display = 'block';
+			if (tipo === "sucesso") {
+				document.getElementById("msg").style.visibility = "visible";
+			} else if (tipo === "erro") {
+				document.getElementById("msgLoginUnico").style.visibility = "visible";
+			}
+		}
+		
+		function limparForm() {
+			var elementos = document.getElementById("formUser").elements;
+			for (var i = 0; i < elementos.length; i++){
+				elementos[i].value = '';
+			}
+		}
+		
+		function deletar(){
+			document.getElementById("formUser").method = 'get';
+			document.getElementById("acao").value = "deletar";
+			document.getElementById("formUser").submit();
+		}
 
-	         
-	            setTimeout(function() {
-	                msgElement.style.opacity = 0; 
-	            }, 5000);  
-	        }
+		<%
+			String msgLoginUnico = (String) request.getAttribute("msgLoginUnico");
+			String msg = (String) request.getAttribute("msg");
 
-	        window.onload = showMessageLoginUnico;
-	        
-	       
-	        function exibirMensagem(tipo) {
-	           
-	            document.getElementById("msg").style.visibility = "hidden";
-	            document.getElementById("msgLoginUnico").style.visibility = "hidden";
-
-	            if (tipo === "sucesso") {
-	               
-	                document.getElementById("msg").style.visibility = "visible";
-	            } else if (tipo === "erro") {
-	                
-	                document.getElementById("msgLoginUnico").style.visibility = "visible";
-	            }
-	        }
-
-	     
-	        <%
-	            String msgLoginUnico = (String) request.getAttribute("msgLoginUnico");
-	            String msg = (String) request.getAttribute("msg");
-
-	            if (msgLoginUnico != null) {
-	        %>
-	                exibirMensagem("erro");
-	        <%
-	            } else if (msg != null) {
-	        %>
-	                exibirMensagem("sucesso");
-	        <%
-	            }
-	        %>
+			if (msgLoginUnico != null) {
+		%>
+				exibirMensagem("erro");
+		<%
+			} else if (msg != null) {
+		%>
+				exibirMensagem("sucesso");
+		<%
+			}
+		%>
 	</script>
 </body>
-
 </html>

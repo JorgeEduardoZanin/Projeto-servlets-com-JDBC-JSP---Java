@@ -71,7 +71,7 @@ public class ModelLogin implements Serializable {
 	}
 	
 	public boolean newId() {
-		if(this.id !=null && this.id >0) {
+		if(this.id !=null && this.id > 0) {
 			return false;
 		}
 		return true;

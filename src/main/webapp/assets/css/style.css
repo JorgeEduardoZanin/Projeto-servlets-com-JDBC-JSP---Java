@@ -10379,7 +10379,7 @@ body.menu-bottom #collapse-menu {
             box-shadow: none; }
     .form-material .form-control:focus ~ .form-bar:after, .form-material .form-control:focus ~ .form-bar:before {
       width: 50%; }
-  .form-material .form-control:focus ~ .float-label, .form-material .form-control:valid ~ .float-label {
+  .form-material .form-control:focus ~ ., .form-material .form-control:valid ~ . {
     top: -14px;
     font-size: 11px; }
 .form-material textarea {
@@ -10401,7 +10401,7 @@ body.menu-bottom #collapse-menu {
     left: 50%; }
   .form-material .form-bar:after {
     right: 50%; }
-.form-material .float-label {
+.form-material . {
   pointer-events: none;
   position: absolute;
   top: 12px;
@@ -10441,10 +10441,10 @@ body.menu-bottom #collapse-menu {
     padding: .5rem 0;
     font-size: 1.25rem;
     line-height: 1.5; }
-    .form-material .material-group.material-group-lg .form-control:focus ~ .float-label, .form-material .material-group.material-group-lg .form-control:valid ~ .float-label {
+    .form-material .material-group.material-group-lg .form-control:focus ~ ., .form-material .material-group.material-group-lg .form-control:valid ~ . {
       top: -15px;
       font-size: 14px; }
-  .form-material .material-group.material-group-lg .float-label {
+  .form-material .material-group.material-group-lg . {
     font-size: 1.25rem; }
   .form-material .material-group.material-group-sm .material-addone {
     padding: .25rem .5rem; }
@@ -10454,7 +10454,7 @@ body.menu-bottom #collapse-menu {
     padding: .25rem  0;
     font-size: .875rem;
     line-height: 1.5; }
-    .form-material .material-group.material-group-sm .form-control:focus ~ .float-label, .form-material .material-group.material-group-sm .form-control:valid ~ .float-label {
+    .form-material .material-group.material-group-sm .form-control:focus ~ ., .form-material .material-group.material-group-sm .form-control:valid ~ .float-label {
       top: -9px;
       font-size: 11px; }
   .form-material .material-group.material-group-sm .float-label {
@@ -10484,7 +10484,7 @@ body.menu-bottom #collapse-menu {
 .form-material .form-default .form-control:focus ~ .form-bar:after, .form-material .form-default .form-control:focus ~ .form-bar:before {
   background: #d6d6d6; }
 .form-material .form-default.form-static-label .float-label {
-  color: #d6d6d6; }
+  color: #868585; }
 .form-material .form-default.form-static-label .form-control {
   border-bottom-color: #d6d6d6; }
 .form-material .material-group-default .material-addone i, .form-material .material-group-default .material-addone span {

@@ -19,9 +19,29 @@ public class ServletUsuarioController extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
+		try {
+			String acao = request.getParameter("acao");
+
+			if (acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("deletar")) {
+				String idBruto = request.getParameter("id");
+				Long id = idBruto != null && !idBruto.isEmpty() ? Long.parseLong(idBruto) : null;
+
+				daoUser.delete(id);
+				
+				request.setAttribute("msgDel", "Usuario excluido com sucesso!");
+		
+			}
+			request.getRequestDispatcher("principal/cadastro-usuario.jsp").forward(request, response);
+		} catch (SQLException e) {
+			RequestDispatcher redirecionar = request.getRequestDispatcher("erro.jsp");
+			request.setAttribute("msg", e.getMessage());
+			redirecionar.forward(request, response);
+			e.printStackTrace();
+		}
 	}
 
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		try {
 			String msg = "Usuario criado com sucesso!";
 			String idBruto = request.getParameter("id");
@@ -32,36 +52,36 @@ public class ServletUsuarioController extends HttpServlet {
 
 			Long id = idBruto != null && !idBruto.isEmpty() ? Long.parseLong(idBruto) : null;
 			ModelLogin modelLogin = new ModelLogin(id, name, email, login, senha);
-			
-			boolean loginUnico = daoUser.loginUnico(login);
-			
-			if(loginUnico == true && modelLogin.getId() == null) {
-			request.setAttribute("msgLoginUnico", "Esse usuario ja existe!");
-			request.setAttribute("modelLogin", modelLogin);
-			request.getRequestDispatcher("principal/cadastro-usuario.jsp").forward(request, response);
-			return;
-			}
 
-			modelLogin = daoUser.createUser(modelLogin);
-			if(!modelLogin.newId()) {
-				msg = "Usuario atulizado com sucesso!";
+			boolean loginUnico = daoUser.loginUnico(login);
+
+			if (loginUnico == true && modelLogin.getId() == null) {
+				request.setAttribute("msgLoginUnico", "Esse usuario ja existe!");
+				request.setAttribute("modelLogin", modelLogin);
+				request.getRequestDispatcher("principal/cadastro-usuario.jsp").forward(request, response);
+				return;
 			}
+			if (!modelLogin.newId()) {
+				msg = "Usuario atualizado com sucesso!";
+			}
+			modelLogin = daoUser.createUser(modelLogin);
+			
 			request.setAttribute("msg", msg);
 			request.setAttribute("modelLogin", modelLogin);
 			request.getRequestDispatcher("principal/cadastro-usuario.jsp").forward(request, response);
-			
+
 		} catch (SQLException e) {
 			RequestDispatcher redirecionar = request.getRequestDispatcher("erro.jsp");
-            request.setAttribute("msg", e.getMessage());
-            redirecionar.forward(request, response);
+			request.setAttribute("msg", e.getMessage());
+			redirecionar.forward(request, response);
 			e.printStackTrace();
 		} catch (Exception e) {
 			RequestDispatcher redirecionar = request.getRequestDispatcher("erro.jsp");
-            request.setAttribute("msg", e.getMessage());
-            redirecionar.forward(request, response);
+			request.setAttribute("msg", e.getMessage());
+			redirecionar.forward(request, response);
 			e.printStackTrace();
 		}
-		
+
 	}
 
 }
