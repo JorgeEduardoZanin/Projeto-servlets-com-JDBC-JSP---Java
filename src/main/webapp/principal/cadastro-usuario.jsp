@@ -164,7 +164,7 @@
 			}, 5000);
 		}
 
-		// Função para disparar todas as mensagens após o carregamento da página
+	
 		window.onload = function() {
 			showMessage('msg');
 			showMessage('msgLoginUnico');
@@ -191,9 +191,12 @@
 		}
 		
 		function deletar(){
+			
+			if(confirm('Deseja realmente excluir os dados?')){
 			document.getElementById("formUser").method = 'get';
 			document.getElementById("acao").value = "deletar";
 			document.getElementById("formUser").submit();
+			}
 		}
 
 		<%
