@@ -2,7 +2,9 @@
 	pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html>
 <html lang="en">
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+<link
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+	rel="stylesheet">
 
 <jsp:include page="head.jsp"></jsp:include>
 
@@ -39,66 +41,63 @@
 														<form class="form-material"
 															action="<%=request.getContextPath()%>/ServletUsuarioController"
 															method="post" id="formUser">
-															
+
 															<input type="hidden" name="acao" id="acao" value="">
 															<div class="form-group form-default form-static-label">
 																<input type="text" name="id" id="id"
 																	class="form-control" readonly="readonly"
-																	value="${modelLogin.id}">
-																<span class="form-bar"></span>
-																<label class="float-label">ID</label>
+																	value="${modelLogin.id}"> <span
+																	class="form-bar"></span> <label class="float-label">ID</label>
 															</div>
 															<div class="form-group form-default form-static-label">
 																<input type="text" name="name" id="name"
 																	class="form-control" required="required"
-																	value="${modelLogin.name}">
-																<span class="form-bar"></span>
-																<label class="float-label">Nome</label>
+																	value="${modelLogin.name}"> <span
+																	class="form-bar"></span> <label class="float-label">Nome</label>
 															</div>
 															<div class="form-group form-default form-static-label">
 																<input type="email" name="email" id="email"
 																	class="form-control" required="required"
-																	value="${modelLogin.email}">
-																<span class="form-bar"></span>
-																<label class="float-label">E-mail</label>
+																	value="${modelLogin.email}"> <span
+																	class="form-bar"></span> <label class="float-label">E-mail</label>
 															</div>
 															<div class="form-group form-default form-static-label">
 																<input type="text" name="login" id="login"
 																	class="form-control" required="required"
-																	value="${modelLogin.login}">
-																<span class="form-bar"></span>
-																<label class="float-label">Login</label>
+																	value="${modelLogin.login}"> <span
+																	class="form-bar"></span> <label class="float-label">Login</label>
 															</div>
 															<div class="form-group form-default form-static-label">
 																<input type="password" name="senha" id="senha"
 																	class="form-control" required="required"
-																	value="${modelLogin.senha}">
-																<span class="form-bar"></span>
-																<label class="float-label">Senha</label>
-																<i id="eye-icon" class="fa fa-eye" onclick="togglePassword()"></i>
+																	value="${modelLogin.senha}"> <span
+																	class="form-bar"></span> <label class="float-label">Senha</label>
+																<i id="eye-icon" class="fa fa-eye"
+																	onclick="togglePassword()"></i>
 															</div>
 
-															<button class="btn waves-effect waves-light btn-primary btn-outline-primary" 
+															<button
+																class="btn waves-effect waves-light btn-primary btn-outline-primary"
 																type="button" onclick="limparForm()">
 																<i class="icofont icofont-user-alt-3"></i>Limpar
 															</button>
-															<button class="btn waves-effect waves-light btn-inverse btn-outline-inverse">
+															<button
+																class="btn waves-effect waves-light btn-inverse btn-outline-inverse">
 																<i class="icofont icofont-exchange"></i>Salvar
 															</button>
-															<button class="btn waves-effect waves-light btn-danger btn-outline-danger" type="button" onclick="deletar()">
+															<button
+																class="btn waves-effect waves-light btn-danger btn-outline-danger"
+																type="button" onclick="deletarAjax()">
 																<i class="icofont icofont-eye-alt"></i>Excluir
 															</button>
+															<button type="button" class="btn btn-outline-success"
+																data-toggle="modal" data-target="#modalUser">Buscar</button>
 														</form>
 													</div>
 												</div>
 											</div>
 										</div>
-										<!-- Container unificado para as mensagens -->
-										<div class="msg-container">
-											<span id="msg" class="msgs">${msg}</span>
-											<span id="msgLoginUnico" class="msgs">${msgLoginUnico}</span>
-											<span id="msgDel" class="msgs">${msgDel}</span>
-										</div>
+										<!-- Removemos o container de mensagens baseado em span -->
 									</div>
 									<!-- Page-body end -->
 								</div>
@@ -111,33 +110,118 @@
 		</div>
 	</div>
 
+	<!-- Modal para Mensagem de Sucesso -->
+	<div id="modalMsg" class="modals">
+		<div class="modal-content">
+			<p class="modal-text msgSucesso" id="modalMsgText"></p>
+			<button onclick="closeModal('modalMsg')" class="modalButton">OK</button>
+		</div>
+	</div>
+
+	<!-- Modal para Mensagem de Erro (Login Único) -->
+	<div id="modalMsgLogin" class="modals">
+		<div class="modal-content">
+			<p class="modal-text msgErro" id="modalMsgLoginText"></p>
+			<button onclick="closeModal('modalMsgLogin')" class="modalButton">OK</button>
+		</div>
+	</div>
+
+	<!-- Modal para Mensagem de Exclusão via Ajax -->
+	<div id="modalMsgDelAjax" class="modals">
+		<div class="modal-content">
+			<p class="modal-text msgErro" id="modalMsgDelAjaxText"></p>
+			<button onclick="closeModal('modalMsgDelAjax')" class="modalButton">OK</button>
+		</div>
+	</div>
+	<!-- Modal -->
+	<div class="modal fade" id="modalUser" tabindex="-1" role="dialog"
+		aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel">Buscar usuário</h5>
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+
+					<div class="input-group mb-3">
+						<input type="text" class="form-control"
+							placeholder="Nome" aria-label="Nome"
+							aria-describedby="basic-addon2">
+						<div class="input-group-append" id="nomeBusca">
+							<button class="btn btn-outline-success" type="button" onclick="buscarUser()">Buscar</button>
+						</div>
+					</div>
+
+					<table class="table">
+						<thead>
+							<tr>
+								<th scope="col">ID</th>
+								<th scope="col">Name</th>
+								<th scope="col">Username</th>
+								<th scope="col">Email</th>
+							</tr>
+						</thead>
+						<tbody>
+							
+						</tbody>
+					</table>
+
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary"
+						data-dismiss="modal">Fechar</button>
+				</div>
+			</div>
+		</div>
+	</div>
 	<style>
-	.msg-container {
-		display: flex;
-		align-items: center; /* alinha verticalmente */
-		gap: 10px; /* espaço entre as mensagens */
-	}
-	.msgs {
-		/* Remove a margem que empurrava as mensagens para baixo */
-		margin: 0;
-		padding: 10px;
-		border-radius: 5px;
-		font-size: 20px;
-		transition: opacity 3s ease-out;
-		opacity: 1;
-		visibility: hidden;
-	}
-	#msg {
-		color: green;
-	}
-	/* Tanto a mensagem de login único quanto a de exclusão ficam em vermelho */
-	#msgLoginUnico,
-	#msgDel {
-		color: red;
-	}
+/* Estilos para os modais */
+.modals {
+	display: none; /* Escondido por padrão */
+	position: fixed;
+	z-index: 1000;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+	background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-text {
+	font-size: 17px;
+}
+
+.modal-content {
+	background-color: #fefefe;
+	margin: 15% auto;
+	padding: 20px;
+	border: 1px solid #888;
+	width: 80%;
+	max-width: 400px;
+	text-align: center;
+}
+
+.modalButton {
+	margin-top: 20px;
+	padding: 10px 20px;
+}
+
+.msgErro {
+	color: red;
+}
+
+.msgSucesso {
+	color: green;
+}
 </style>
 
 	<jsp:include page="javascript.jsp"></jsp:include>
+	
 	<script>
 		function togglePassword() {
 			var senhaInput = document.getElementById("senha");
@@ -154,33 +238,15 @@
 			}
 		}
 		
-		function showMessage(id) {
-			var msgElement = document.getElementById(id);
-			msgElement.style.display = 'block';
-			msgElement.style.visibility = 'visible';
-			
-			setTimeout(function() {
-				msgElement.style.opacity = 0;
-			}, 5000);
+		function showModal(modalId, messageText) {
+			var modal = document.getElementById(modalId);
+			var modalText = modal.querySelector('.modal-text');
+			modalText.textContent = messageText;
+			modal.style.display = 'block';
 		}
-
-	
-		window.onload = function() {
-			showMessage('msg');
-			showMessage('msgLoginUnico');
-			showMessage('msgDel');
-		};
 		
-		function exibirMensagem(tipo) {
-			document.getElementById("msg").style.visibility = "hidden";
-			document.getElementById("msgLoginUnico").style.visibility = "hidden";
-			document.getElementById("msgDel").style.visibility = "hidden";
-
-			if (tipo === "sucesso") {
-				document.getElementById("msg").style.visibility = "visible";
-			} else if (tipo === "erro") {
-				document.getElementById("msgLoginUnico").style.visibility = "visible";
-			}
+		function closeModal(modalId) {
+			document.getElementById(modalId).style.display = 'none';
 		}
 		
 		function limparForm() {
@@ -191,28 +257,60 @@
 		}
 		
 		function deletar(){
-			
 			if(confirm('Deseja realmente excluir os dados?')){
-			document.getElementById("formUser").method = 'get';
-			document.getElementById("acao").value = "deletar";
-			document.getElementById("formUser").submit();
+				document.getElementById("formUser").method = 'get';
+				document.getElementById("acao").value = "deletar";
+				document.getElementById("formUser").submit();
 			}
 		}
-
-		<%
-			String msgLoginUnico = (String) request.getAttribute("msgLoginUnico");
-			String msg = (String) request.getAttribute("msg");
-
-			if (msgLoginUnico != null) {
-		%>
-				exibirMensagem("erro");
-		<%
-			} else if (msg != null) {
-		%>
-				exibirMensagem("sucesso");
-		<%
+		
+		function deletarAjax() {
+		    if(confirm('Deseja realmente excluir os dados?')){
+		        var urlAction = document.getElementById("formUser").action;
+		        var idUser = document.getElementById("id").value;
+		        $.ajax({
+		            method: "get",
+		            url: urlAction,
+		            data: "id=" + idUser + "&acao=deletarAjax",
+		            success: function(response) {
+		                limparForm();
+		                showModal('modalMsgDelAjax', response);
+		            }
+		        }).fail(function(xhr, status, errorThrown) {
+		            alert("Erro ao deletar usuário por ID: " + xhr.responseText);
+		        });
+		    }
+		}
+		
+		function buscarUser(){
+			var idUser = document.getElementById("nomeBusca").value;
+		}
+		
+		function exibirMensagem(tipo, mensagem) {
+			closeModal('modalMsg');
+			closeModal('modalMsgLogin');
+			closeModal('modalMsgDelAjax');
+			
+			if (tipo === "sucesso") {
+				showModal('modalMsg', mensagem);
+			} else if (tipo === "erro") {
+				showModal('modalMsgLogin', mensagem);
 			}
-		%>
+		}
+		
+		<%String msgLoginUnico = (String) request.getAttribute("msgLoginUnico");
+		String msg = (String) request.getAttribute("msg");
+		String msgDelAjax = (String) request.getAttribute("msgDelAjax");
+
+		if (msgLoginUnico != null) {%>
+				exibirMensagem("erro", "<%=msgLoginUnico%>");
+		<%} else if (msg != null) {%>
+				exibirMensagem("sucesso", "<%=msg%>");
+		<%} else if (msgDelAjax != null) {%>
+				exibirMensagem("erro", "<%=msgDelAjax%>
+		");
+	<%}%>
+		
 	</script>
 </body>
 </html>

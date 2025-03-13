@@ -22,16 +22,16 @@ public class ServletUsuarioController extends HttpServlet {
 		try {
 			String acao = request.getParameter("acao");
 
-			if (acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("deletar")) {
+			if (acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("deletarAjax")) {
 				String idBruto = request.getParameter("id");
 				Long id = idBruto != null && !idBruto.isEmpty() ? Long.parseLong(idBruto) : null;
 
 				daoUser.delete(id);
 				
-				request.setAttribute("msgDel", "Usuario excluido com sucesso!");
-		
+				response.getWriter().write("Usuario excluido com sucesso!");
 			}
-			request.getRequestDispatcher("principal/cadastro-usuario.jsp").forward(request, response);
+			
+			
 		} catch (SQLException e) {
 			RequestDispatcher redirecionar = request.getRequestDispatcher("erro.jsp");
 			request.setAttribute("msg", e.getMessage());
