@@ -148,11 +148,11 @@
 				<div class="modal-body">
 
 					<div class="input-group mb-3">
-						<input type="text" class="form-control"
-							placeholder="Nome" aria-label="Nome"
-							aria-describedby="basic-addon2">
-						<div class="input-group-append" id="nomeBusca">
-							<button class="btn btn-outline-success" type="button" onclick="buscarUser()">Buscar</button>
+						<input type="text" class="form-control" placeholder="Nome"
+							aria-label="Nome" aria-describedby="basic-addon2" id="nomeBusca">
+						<div class="input-group-append" >
+							<button class="btn btn-outline-success" type="button"
+								onclick="buscarUser()">Buscar</button>
 						</div>
 					</div>
 
@@ -166,7 +166,7 @@
 							</tr>
 						</thead>
 						<tbody>
-							
+
 						</tbody>
 					</table>
 
@@ -221,7 +221,7 @@
 </style>
 
 	<jsp:include page="javascript.jsp"></jsp:include>
-	
+
 	<script>
 		function togglePassword() {
 			var senhaInput = document.getElementById("senha");
@@ -271,7 +271,7 @@
 		        $.ajax({
 		            method: "get",
 		            url: urlAction,
-		            data: "id=" + idUser + "&acao=deletarAjax",
+		            data: "id=" + idUser + "&acao=deletarajax",
 		            success: function(response) {
 		                limparForm();
 		                showModal('modalMsgDelAjax', response);
@@ -283,7 +283,22 @@
 		}
 		
 		function buscarUser(){
-			var idUser = document.getElementById("nomeBusca").value;
+			var nomeBusca = document.getElementById("nomeBusca").value;
+			
+			
+			if(nomeBusca != null && nomeBusca != '' && nomeBusca.trim()!=''){
+				 var urlAction = document.getElementById("formUser").action;
+				 $.ajax({
+			     	method: "get",
+			        url: urlAction,
+			        data: "nomeBusca=" + nomeBusca + "&acao=buscarUserAjax",
+			        success: function(response) {
+			   			limparForm();
+			        	}
+			        }).fail(function(xhr, status, errorThrown) {
+			            alert("Erro ao buscar usuario: " + xhr.responseText);
+			        });
+			}
 		}
 		
 		function exibirMensagem(tipo, mensagem) {
@@ -299,10 +314,10 @@
 		}
 		
 		<%String msgLoginUnico = (String) request.getAttribute("msgLoginUnico");
-		String msg = (String) request.getAttribute("msg");
-		String msgDelAjax = (String) request.getAttribute("msgDelAjax");
+String msg = (String) request.getAttribute("msg");
+String msgDelAjax = (String) request.getAttribute("msgDelAjax");
 
-		if (msgLoginUnico != null) {%>
+if (msgLoginUnico != null) {%>
 				exibirMensagem("erro", "<%=msgLoginUnico%>");
 		<%} else if (msg != null) {%>
 				exibirMensagem("sucesso", "<%=msg%>");

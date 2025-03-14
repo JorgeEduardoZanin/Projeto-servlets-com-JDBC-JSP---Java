@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import connection.SingleConnection;
 import entities.ModelLogin;
@@ -84,6 +86,32 @@ public class daoUserRepository {
 
 		return modelLogin;
 	}
+	
+	
+	public List<ModelLogin> getUserList(String nameUser) throws Exception {
+		
+		List<ModelLogin> listaUser = new ArrayList<ModelLogin>();
+		ModelLogin modelLogin = new ModelLogin();
+
+		String sql = "SELECT * FROM model_login WHERE upper(name) like upper(?)";
+		PreparedStatement sttm = connection.prepareStatement(sql);
+		sttm.setString(1, "%"+nameUser+"%");
+		ResultSet resultSet = sttm.executeQuery();
+
+		while (resultSet.next()) {
+			String name = resultSet.getString("name");
+			String loginUser = resultSet.getString("login");
+			long id = resultSet.getLong("id");
+			String email = resultSet.getString("email");
+			String senha = resultSet.getString("senha");
+
+			modelLogin = new ModelLogin(id, name, email, loginUser, senha);
+			listaUser.add(modelLogin);
+		}
+
+		return listaUser;
+	}
+
 
 	public boolean loginUnico(String login) throws Exception {
 

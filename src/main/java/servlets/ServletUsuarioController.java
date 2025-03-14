@@ -2,6 +2,11 @@ package servlets;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.List;
+
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import dao.daoUserRepository;
 import entities.ModelLogin;
@@ -16,23 +21,43 @@ public class ServletUsuarioController extends HttpServlet {
 
 	private daoUserRepository daoUser = new daoUserRepository();
 
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		try {
 			String acao = request.getParameter("acao");
-
-			if (acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("deletarAjax")) {
-				String idBruto = request.getParameter("id");
-				Long id = idBruto != null && !idBruto.isEmpty() ? Long.parseLong(idBruto) : null;
-
-				daoUser.delete(id);
-				
-				response.getWriter().write("Usuario excluido com sucesso!");
+			
+			if (acao != null && !acao.isEmpty()) {
+			    
+				switch (acao.toLowerCase()) {
+			        
+					case "deletarajax":
+			            String idBruto = request.getParameter("id");
+			            Long id = idBruto != null && !idBruto.isEmpty() ? Long.parseLong(idBruto) : null;
+			            daoUser.delete(id);
+			            response.getWriter().write("Usuario excluido com sucesso!");
+			            break;
+			       
+					case "buscaruserajax":
+						String nomeBusca = request.getParameter("nomeBusca");			      
+			            List<ModelLogin> dadosJsonUser = daoUser.getUserList(nomeBusca);
+			            
+			            //usando a biblioteca para json jackson json
+			            ObjectMapper mapper = new ObjectMapper();
+			            String json = mapper.writeValueAsString(dadosJsonUser);
+			            System.out.println(json);
+			            response.getWriter().write(json);
+			            break;
+					default:
+			            break;
+			    }
 			}
 			
-			
 		} catch (SQLException e) {
+			RequestDispatcher redirecionar = request.getRequestDispatcher("erro.jsp");
+			request.setAttribute("msg", e.getMessage());
+			redirecionar.forward(request, response);
+			e.printStackTrace();
+		} catch (Exception e) {
 			RequestDispatcher redirecionar = request.getRequestDispatcher("erro.jsp");
 			request.setAttribute("msg", e.getMessage());
 			redirecionar.forward(request, response);
