@@ -101,7 +101,7 @@ public class daoUserRepository {
 		while (resultSet.next()) {
 			String name = resultSet.getString("name");
 			String loginUser = resultSet.getString("login");
-			long id = resultSet.getLong("id");
+			long id = resultSet.getLong("id"); 
 			String email = resultSet.getString("email");
 			String senha = resultSet.getString("senha");
 

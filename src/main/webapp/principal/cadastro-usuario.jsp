@@ -97,9 +97,9 @@
 												</div>
 											</div>
 										</div>
-										<!-- Removemos o container de mensagens baseado em span -->
+
 									</div>
-									<!-- Page-body end -->
+
 								</div>
 								<div id="styleSelector"></div>
 							</div>
@@ -110,7 +110,7 @@
 		</div>
 	</div>
 
-	<!-- Modal para Mensagem de Sucesso -->
+
 	<div id="modalMsg" class="modals">
 		<div class="modal-content">
 			<p class="modal-text msgSucesso" id="modalMsgText"></p>
@@ -118,7 +118,7 @@
 		</div>
 	</div>
 
-	<!-- Modal para Mensagem de Erro (Login Único) -->
+
 	<div id="modalMsgLogin" class="modals">
 		<div class="modal-content">
 			<p class="modal-text msgErro" id="modalMsgLoginText"></p>
@@ -126,14 +126,14 @@
 		</div>
 	</div>
 
-	<!-- Modal para Mensagem de Exclusão via Ajax -->
+
 	<div id="modalMsgDelAjax" class="modals">
 		<div class="modal-content">
 			<p class="modal-text msgErro" id="modalMsgDelAjaxText"></p>
 			<button onclick="closeModal('modalMsgDelAjax')" class="modalButton">OK</button>
 		</div>
 	</div>
-	<!-- Modal -->
+
 	<div class="modal fade" id="modalUser" tabindex="-1" role="dialog"
 		aria-labelledby="exampleModalLabel" aria-hidden="true">
 		<div class="modal-dialog" role="document">
@@ -150,26 +150,27 @@
 					<div class="input-group mb-3">
 						<input type="text" class="form-control" placeholder="Nome"
 							aria-label="Nome" aria-describedby="basic-addon2" id="nomeBusca">
-						<div class="input-group-append" >
+						<div class="input-group-append">
 							<button class="btn btn-outline-success" type="button"
 								onclick="buscarUser()">Buscar</button>
 						</div>
 					</div>
+					<div style="height: 300px; overflow: scroll;">
+						<table class="table" id="resultUserList">
+							<thead>
+								<tr>
+									<th scope="col">ID</th>
+									<th scope="col">Name</th>
+									<th scope="col">Email</th>
+									<th scope="col">Ver</th>
+								</tr>
+							</thead>
+							<tbody>
 
-					<table class="table">
-						<thead>
-							<tr>
-								<th scope="col">ID</th>
-								<th scope="col">Name</th>
-								<th scope="col">Username</th>
-								<th scope="col">Email</th>
-							</tr>
-						</thead>
-						<tbody>
-
-						</tbody>
-					</table>
-
+							</tbody>
+						</table>
+					</div>
+					<span id="totalResultados"></span>
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-secondary"
@@ -179,9 +180,8 @@
 		</div>
 	</div>
 	<style>
-/* Estilos para os modais */
 .modals {
-	display: none; /* Escondido por padrão */
+	display: none;
 	position: fixed;
 	z-index: 1000;
 	left: 0;
@@ -293,12 +293,27 @@
 			        url: urlAction,
 			        data: "nomeBusca=" + nomeBusca + "&acao=buscarUserAjax",
 			        success: function(response) {
-			   			limparForm();
+			   			var json = JSON.parse(response);
+			   			
+			   			$('#resultUserList > tbody > tr').remove();
+			   			
+			   			for(var i=0; i < json.length; i++){
+			   				 $('#resultUserList > tbody').append('<tr> <td>'+ json[i].id+'</td> <td>'+json[i].name+'</td> <td>'+json[i].email+'</td> <td><button onclick="verNaTela('+json[i].id+')"type="button" class="btn btn-outline-info">Ver</button></td> </tr>'); 
+			   			}
+			   			
+			   			document.getElementById('totalResultados').textContent = 'Resultados:' +json.length;
 			        	}
 			        }).fail(function(xhr, status, errorThrown) {
 			            alert("Erro ao buscar usuario: " + xhr.responseText);
 			        });
 			}
+		}
+		
+		function verNaTela(id){
+			 
+			var urlAction = document.getElementById("formUser").action;
+			
+			window.location.href = urlAction + '?acao=verNaTela'
 		}
 		
 		function exibirMensagem(tipo, mensagem) {
