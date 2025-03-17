@@ -44,9 +44,18 @@ public class ServletUsuarioController extends HttpServlet {
 			            //usando a biblioteca para json jackson json
 			            ObjectMapper mapper = new ObjectMapper();
 			            String json = mapper.writeValueAsString(dadosJsonUser);
-			            System.out.println(json);
 			            response.getWriter().write(json);
 			            break;
+			            
+					case "vernatela":
+						
+						String idUser = request.getParameter("id");
+						ModelLogin modelLogin = daoUser.getUserId(idUser);
+						
+						request.setAttribute("msgLoginUnico", "Usuario redirecionado!");
+						request.setAttribute("modelLogin", modelLogin);
+						request.getRequestDispatcher("principal/cadastro-usuario.jsp").forward(request, response);
+						break;
 					default:
 			            break;
 			    }

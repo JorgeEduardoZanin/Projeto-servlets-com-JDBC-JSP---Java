@@ -211,13 +211,6 @@
 	padding: 10px 20px;
 }
 
-.msgErro {
-	color: red;
-}
-
-.msgSucesso {
-	color: green;
-}
 </style>
 
 	<jsp:include page="javascript.jsp"></jsp:include>
@@ -313,7 +306,7 @@
 			 
 			var urlAction = document.getElementById("formUser").action;
 			
-			window.location.href = urlAction + '?acao=verNaTela'
+			window.location.href =urlAction + '?acao=verNaTela&id='+id;
 		}
 		
 		function exibirMensagem(tipo, mensagem) {

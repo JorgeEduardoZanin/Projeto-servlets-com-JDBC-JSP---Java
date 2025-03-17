@@ -87,6 +87,27 @@ public class daoUserRepository {
 		return modelLogin;
 	}
 	
+	public ModelLogin getUserId(String id) throws Exception {
+		ModelLogin modelLogin = new ModelLogin();
+
+		String sql = "SELECT login, senha, id, name, email FROM model_login WHERE id = (?);";
+		PreparedStatement sttm = connection.prepareStatement(sql);
+		sttm.setLong(1, Long.parseLong(id));
+		ResultSet resultSet = sttm.executeQuery();
+
+		while (resultSet.next()) {
+			String name = resultSet.getString("name");
+			String loginUser = resultSet.getString("login");
+			long idUser = resultSet.getLong("id");
+			String email = resultSet.getString("email");
+			String senha = resultSet.getString("senha");
+
+			modelLogin = new ModelLogin(idUser, name, email, loginUser, senha);
+		}
+
+		return modelLogin;
+	}
+	
 	
 	public List<ModelLogin> getUserList(String nameUser) throws Exception {
 		
