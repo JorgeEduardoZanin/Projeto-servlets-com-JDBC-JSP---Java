@@ -7,16 +7,22 @@ public class ModelLogin implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	private Long id;
+	
 	private String name;
 	private String email;
 	private String login;
 	private String senha;
+	private String cargo;
+	
+	private boolean userAdmin;
+	
 	
 	public ModelLogin () {
 		
 	}
 	
 	public ModelLogin(Long id, String name, String email, String login, String senha) {
+		super();
 		this.id = id;
 		this.name = name;
 		this.email = email;
@@ -62,6 +68,22 @@ public class ModelLogin implements Serializable {
 
 	public void setSenha(String senha) {
 		this.senha = senha;
+	}
+
+	public boolean getUserAdmin() {
+		return userAdmin;
+	}
+
+	public void setUserAdmin(boolean userAdmin) {
+		this.userAdmin = userAdmin;
+	}
+
+	public String getCargo() {
+		return cargo;
+	}
+
+	public void setCargo(String cargo) {
+		this.cargo = cargo;
 	}
 
 	@Override

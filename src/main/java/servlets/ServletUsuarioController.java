@@ -16,10 +16,11 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-public class ServletUsuarioController extends HttpServlet {
+public class ServletUsuarioController extends ServletGenericUtil {
 	private static final long serialVersionUID = 1L;
 
 	private daoUserRepository daoUser = new daoUserRepository();
+	
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
@@ -33,7 +34,7 @@ public class ServletUsuarioController extends HttpServlet {
 
 				case "deletarajax":
 					//para listar todos os users
-					List<ModelLogin>  users = daoUser.listaUsers();
+					List<ModelLogin>  users = daoUser.listaUsers(super.getUserLogado(request));
 					request.setAttribute("modelLogins", users);
 					
 					String idBruto = request.getParameter("id");
@@ -44,11 +45,11 @@ public class ServletUsuarioController extends HttpServlet {
 
 				case "buscaruserajax":
 					//para listar todos os users
-					List<ModelLogin>  usersList = daoUser.listaUsers();
+					List<ModelLogin>  usersList = daoUser.listaUsers(super.getUserLogado(request));
 					request.setAttribute("modelLogins", usersList);
 					
 					String nomeBusca = request.getParameter("nomeBusca");
-					List<ModelLogin> dadosJsonUser = daoUser.getUserList(nomeBusca);
+					List<ModelLogin> dadosJsonUser = daoUser.getUserList(nomeBusca, super.getUserLogado(request));
 
 					// usando a biblioteca para json jackson json
 					ObjectMapper mapper = new ObjectMapper();
@@ -58,11 +59,11 @@ public class ServletUsuarioController extends HttpServlet {
 
 				case "vernatela":
 					//para listar todos os users
-					List<ModelLogin> usersListVer = daoUser.listaUsers();
+					List<ModelLogin> usersListVer = daoUser.listaUsers(super.getUserLogado(request));
 					request.setAttribute("modelLogins", usersListVer);
 
 					String idUser = request.getParameter("id");
-					ModelLogin modelLogin = daoUser.getUserId(idUser);
+					ModelLogin modelLogin = daoUser.getUserId(idUser, super.getUserLogado(request) );
 
 					request.setAttribute("msgLoginUnico", "Usuario redirecionado!");
 					request.setAttribute("modelLogin", modelLogin);
@@ -71,7 +72,7 @@ public class ServletUsuarioController extends HttpServlet {
 
 				case "listausers":
 					//para listar todos os users quando a pagina e carregada
-					List<ModelLogin> usersListAll = daoUser.listaUsers();
+					List<ModelLogin> usersListAll = daoUser.listaUsers(super.getUserLogado(request));
 
 					request.setAttribute("modelLogins", usersListAll);
 					request.getRequestDispatcher("principal/cadastro-usuario.jsp").forward(request, response);
@@ -111,7 +112,7 @@ public class ServletUsuarioController extends HttpServlet {
 
 			if (loginUnico == true && modelLogin.getId() == null) {
 				//para listar todos os users quando o login e igual a um ja criado
-				List<ModelLogin> usersListVer = daoUser.listaUsers();
+				List<ModelLogin> usersListVer = daoUser.listaUsers(super.getUserLogado(request));
 				request.setAttribute("modelLogins", usersListVer);
 				
 				
@@ -122,13 +123,13 @@ public class ServletUsuarioController extends HttpServlet {
 			}
 			if (!modelLogin.newId()) {
 				//para listar todos os users quando um user e atualizado
-				List<ModelLogin> usersListVer = daoUser.listaUsers();
+				List<ModelLogin> usersListVer = daoUser.listaUsers(super.getUserLogado(request));
 				request.setAttribute("modelLogins", usersListVer);
 				msg = "Usuario atualizado com sucesso!";
 			}
-			modelLogin = daoUser.createUser(modelLogin);
+			modelLogin = daoUser.createUser(modelLogin, super.getUserLogado(request));
 			//para listar todos os users quando criado um novo user
-			List<ModelLogin> usersListVer = daoUser.listaUsers();
+			List<ModelLogin> usersListVer = daoUser.listaUsers(super.getUserLogado(request));
 			request.setAttribute("modelLogins", usersListVer);
 
 			request.setAttribute("msg", msg);

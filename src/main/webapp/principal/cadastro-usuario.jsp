@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
 
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>   
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
 <html lang="en">
 <link
@@ -58,6 +58,15 @@
 																	class="form-bar"></span> <label class="float-label">Nome</label>
 															</div>
 															<div class="form-group form-default form-static-label">
+															<select class="form-control" arial-label="Default select example">
+																 <option value="" disabled selected>Cargo</option>
+																<option value="1">Administrador</option>
+																<option value="2">Secretaria</option>
+																<option value="3">Financeiro</option>
+															</select>
+															</div>
+
+															<div class="form-group form-default form-static-label">
 																<input type="email" name="email" id="email"
 																	class="form-control" required="required"
 																	value="${modelLogin.email}"> <span
@@ -69,6 +78,9 @@
 																	value="${modelLogin.login}"> <span
 																	class="form-bar"></span> <label class="float-label">Login</label>
 															</div>
+
+
+
 															<div class="form-group form-default form-static-label">
 																<input type="password" name="senha" id="senha"
 																	class="form-control" required="required"
@@ -77,6 +89,9 @@
 																<i id="eye-icon" class="fa fa-eye"
 																	onclick="togglePassword()"></i>
 															</div>
+
+
+
 
 															<button
 																class="btn waves-effect waves-light btn-primary btn-outline-primary"
@@ -108,7 +123,7 @@
 														<th scope="col">Name</th>
 														<th scope="col">Email</th>
 														<th scope="col">Ver</th>
-														
+
 													</tr>
 												</thead>
 												<tbody>
@@ -117,8 +132,9 @@
 															<td><c:out value="${ml.id}"></c:out></td>
 															<td><c:out value="${ml.name}"></c:out></td>
 															<td><c:out value="${ml.email}"></c:out></td>
-															<td><button onclick="verNaTela('${ml.id}')" type="button" class="btn btn-outline-info">Ver</button></td>
-														
+															<td><button onclick="verNaTela('${ml.id}')"
+																	type="button" class="btn btn-outline-info">Ver</button></td>
+
 														</tr>
 
 													</c:forEach>

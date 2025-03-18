@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
+	<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>  
 <nav class="pcoded-navbar">
 	<div class="sidebar_toggle">
 		<a href="#"><i class="icon-close icons"></i></a>
@@ -52,6 +53,7 @@
 					class="pcoded-mcaret"></span>
 			</a>
 				<ul class="pcoded-submenu">
+				<c:if test="${isAdmin}">
 					<li class=" "><a
 						href="<%=request.getContextPath()%>/ServletUsuarioController?acao=listaUsers"
 						class="waves-effect waves-dark"> <span class="pcoded-micon"><i
@@ -59,6 +61,7 @@
 							data-i18n="nav.basic-components.alert">Cadastro</span> <span
 							class="pcoded-mcaret"></span>
 					</a></li>
+					</c:if>
 					<li class=" "><a href="breadcrumb.html"
 						class="waves-effect waves-dark"> <span class="pcoded-micon"><i
 								class="ti-angle-right"></i></span> <span class="pcoded-mtext"
