@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
+
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>   
 <!DOCTYPE html>
 <html lang="en">
 <link
@@ -96,6 +98,32 @@
 													</div>
 												</div>
 											</div>
+										</div>
+
+										<div style="height: 300px; overflow: scroll;">
+											<table class="table" id="resultUserListView">
+												<thead>
+													<tr>
+														<th scope="col">ID</th>
+														<th scope="col">Name</th>
+														<th scope="col">Email</th>
+														<th scope="col">Ver</th>
+														
+													</tr>
+												</thead>
+												<tbody>
+													<c:forEach items="${modelLogins}" var="ml">
+														<tr>
+															<td><c:out value="${ml.id}"></c:out></td>
+															<td><c:out value="${ml.name}"></c:out></td>
+															<td><c:out value="${ml.email}"></c:out></td>
+															<td><button onclick="verNaTela('${ml.id}')" type="button" class="btn btn-outline-info">Ver</button></td>
+														
+														</tr>
+
+													</c:forEach>
+												</tbody>
+											</table>
 										</div>
 
 									</div>
@@ -210,7 +238,6 @@
 	margin-top: 20px;
 	padding: 10px 20px;
 }
-
 </style>
 
 	<jsp:include page="javascript.jsp"></jsp:include>

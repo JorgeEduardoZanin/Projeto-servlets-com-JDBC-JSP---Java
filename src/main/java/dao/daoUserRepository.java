@@ -69,7 +69,7 @@ public class daoUserRepository {
 	public ModelLogin getUser(String login) throws Exception {
 		ModelLogin modelLogin = new ModelLogin();
 
-		String sql = "SELECT login, senha, id, name, email FROM model_login WHERE login = (?);";
+		String sql = "SELECT login, senha, id, name, email FROM model_login WHERE login = (?) AND useradmin = false;";
 		PreparedStatement sttm = connection.prepareStatement(sql);
 		sttm.setString(1, login);
 		ResultSet resultSet = sttm.executeQuery();
@@ -87,10 +87,32 @@ public class daoUserRepository {
 		return modelLogin;
 	}
 	
+
+	public List<ModelLogin> listaUsers() throws Exception {
+		ModelLogin modelLogin = new ModelLogin();
+		List<ModelLogin> users = new ArrayList<>();
+		String sql = "SELECT * FROM model_login WHERE useradmin = false ORDER BY id ASC";
+		PreparedStatement sttm = connection.prepareStatement(sql);
+		ResultSet resultSet = sttm.executeQuery();
+
+		while (resultSet.next()) {
+			String name = resultSet.getString("name");
+			String loginUser = resultSet.getString("login");
+			long id = resultSet.getLong("id");
+			String email = resultSet.getString("email");
+			String senha = resultSet.getString("senha");
+
+			modelLogin = new ModelLogin(id, name, email, loginUser, senha);
+			users.add(modelLogin);
+		}
+
+		return users;
+	}
+	
 	public ModelLogin getUserId(String id) throws Exception {
 		ModelLogin modelLogin = new ModelLogin();
 
-		String sql = "SELECT login, senha, id, name, email FROM model_login WHERE id = (?);";
+		String sql = "SELECT login, senha, id, name, email FROM model_login WHERE id = (?) AND useradmin = false;";
 		PreparedStatement sttm = connection.prepareStatement(sql);
 		sttm.setLong(1, Long.parseLong(id));
 		ResultSet resultSet = sttm.executeQuery();
@@ -114,7 +136,7 @@ public class daoUserRepository {
 		List<ModelLogin> listaUser = new ArrayList<ModelLogin>();
 		ModelLogin modelLogin = new ModelLogin();
 
-		String sql = "SELECT * FROM model_login WHERE upper(name) like upper(?)";
+		String sql = "SELECT * FROM model_login WHERE upper(name) like upper(?) AND useradmin = false";
 		PreparedStatement sttm = connection.prepareStatement(sql);
 		sttm.setString(1, "%"+nameUser+"%");
 		ResultSet resultSet = sttm.executeQuery();
