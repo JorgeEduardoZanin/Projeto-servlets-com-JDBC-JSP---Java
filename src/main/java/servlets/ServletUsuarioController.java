@@ -51,7 +51,7 @@ public class ServletUsuarioController extends ServletGenericUtil {
 					String nomeBusca = request.getParameter("nomeBusca");
 					List<ModelLogin> dadosJsonUser = daoUser.getUserList(nomeBusca, super.getUserLogado(request));
 
-					// usando a biblioteca para json jackson json
+					// usando a biblioteca para json jackson
 					ObjectMapper mapper = new ObjectMapper();
 					String json = mapper.writeValueAsString(dadosJsonUser);
 					response.getWriter().write(json);
@@ -104,9 +104,11 @@ public class ServletUsuarioController extends ServletGenericUtil {
 			String email = request.getParameter("email");
 			String senha = request.getParameter("senha");
 			String login = request.getParameter("login");
+			String cargo = request.getParameter("cargo");
+			String sexo = request.getParameter("sexo");
 
 			Long id = idBruto != null && !idBruto.isEmpty() ? Long.parseLong(idBruto) : null;
-			ModelLogin modelLogin = new ModelLogin(id, name, email, login, senha);
+			ModelLogin modelLogin = new ModelLogin(id, name, email, login, senha, cargo, sexo);
 
 			boolean loginUnico = daoUser.loginUnico(login);
 

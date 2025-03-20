@@ -1,3 +1,4 @@
+<%@page import="entities.ModelLogin"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
 
@@ -58,12 +59,34 @@
 																	class="form-bar"></span> <label class="float-label">Nome</label>
 															</div>
 															<div class="form-group form-default form-static-label">
-															<select class="form-control" arial-label="Default select example">
-																 <option value="" disabled selected>Cargo</option>
-																<option value="1">Administrador</option>
-																<option value="2">Secretaria</option>
-																<option value="3">Financeiro</option>
-															</select>
+																<select class="form-control"
+																	arial-label="Default select example" name="cargo">
+																	<option value="" disabled selected>Cargo</option>
+																	<option value="Administrador"
+																		<%ModelLogin modelLogin = (ModelLogin) request.getAttribute("modelLogin");
+
+if (modelLogin != null && modelLogin.getCargo().equals("Administrador")) {
+	out.print("");
+	out.print("selected=\"selected\"");
+	out.print("");
+}%>>Administrador</option>
+																	<option value="Secretaria"
+																		<%modelLogin = (ModelLogin) request.getAttribute("modelLogin");
+
+if (modelLogin != null && modelLogin.getCargo().equals("Secretaria")) {
+	out.print("");
+	out.print("selected=\"selected\"");
+	out.print("");
+}%>>Secretaria</option>
+																	<option value="Financeiro"
+																		<%modelLogin = (ModelLogin) request.getAttribute("modelLogin");
+
+if (modelLogin != null && modelLogin.getCargo().equals("Financeiro")) {
+	out.print("");
+	out.print("selected=\"selected\"");
+	out.print("");
+}%>>Financeiro</option>
+																</select>
 															</div>
 
 															<div class="form-group form-default form-static-label">
@@ -72,13 +95,34 @@
 																	value="${modelLogin.email}"> <span
 																	class="form-bar"></span> <label class="float-label">E-mail</label>
 															</div>
+
+															<div class="form-group form-default form-static-label">
+																<input type="radio" name="sexo" value="Masculino"
+																	<%modelLogin = (ModelLogin) request.getAttribute("modelLogin");
+
+if (modelLogin != null && modelLogin.getCargo().equals("Masculino")) {
+	out.print("");
+	out.print("selected=\"selected\"");
+	out.print("");
+}%>>
+																Masculino</> <input type="radio" name="sexo"
+																	value="Feminino"
+																	<%modelLogin = (ModelLogin) request.getAttribute("modelLogin");
+
+if (modelLogin != null && modelLogin.getCargo().equals("Feminino")) {
+	out.print("");
+	out.print("selected=\"selected\"");
+	out.print("");
+}%>>Feminino</>
+															</div>
+
+
 															<div class="form-group form-default form-static-label">
 																<input type="text" name="login" id="login"
 																	class="form-control" required="required"
 																	value="${modelLogin.login}"> <span
 																	class="form-bar"></span> <label class="float-label">Login</label>
 															</div>
-
 
 
 															<div class="form-group form-default form-static-label">
@@ -89,10 +133,6 @@
 																<i id="eye-icon" class="fa fa-eye"
 																	onclick="togglePassword()"></i>
 															</div>
-
-
-
-
 															<button
 																class="btn waves-effect waves-light btn-primary btn-outline-primary"
 																type="button" onclick="limparForm()">

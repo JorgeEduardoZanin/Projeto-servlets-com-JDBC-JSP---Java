@@ -28,9 +28,11 @@ public class daoUserRepository {
 			String senha = modelLogin.getSenha();
 			String name = modelLogin.getName();
 			String email = modelLogin.getEmail();
+			String cargo = modelLogin.getCargo();
+			String sexo = modelLogin.getSenha();
 			
 			if(modelLogin.newId()) {
-			String sql = "INSERT INTO model_login(login, senha, name, email, user_id) VALUES (?, ?, ?, ?, ?);";
+			String sql = "INSERT INTO model_login(login, senha, name, email, user_id, cargo, sexo) VALUES (?, ?, ?, ?, ?, ?, ?);";
 			sttm = connection.prepareStatement(sql);
 
 		
@@ -40,20 +42,24 @@ public class daoUserRepository {
 			sttm.setString(3, name);
 			sttm.setString(4, email);
 			sttm.setLong(5, userLogado);
+			sttm.setString(6, cargo);
+			sttm.setString(7, sexo);
 
 			sttm.execute();
 			connection.commit();
 		    return this.getUserGeneric(modelLogin.getLogin()); 
 			}
 			
-			String sql = "UPDATE model_login SET login=(?), senha=(?), name=(?), email=(?) WHERE id=(?);";
+			String sql = "UPDATE model_login SET login=(?), senha=(?), name=(?), email=(?), cargo=(?), sexo=(?) WHERE id=(?);";
 			sttm = connection.prepareStatement(sql);
 			
 			sttm.setString(1, login);
 			sttm.setString(2, senha);
 			sttm.setString(3, name);
 			sttm.setString(4, email);
-			sttm.setLong(5, modelLogin.getId());
+			sttm.setLong(7, modelLogin.getId());
+			sttm.setString(5, cargo);
+			sttm.setString(6, sexo);
 			
 			sttm.executeUpdate();
 			connection.commit();
@@ -69,31 +75,10 @@ public class daoUserRepository {
 	}
 	
 	
-	public boolean userAdmin(String id) throws SQLException {
-		String sql = "SELECT * FROM model_login WHERE id =(?);";
-		PreparedStatement sttm = connection.prepareStatement(sql);
-		sttm.setString(1, id);
-		ResultSet resultSet = sttm.executeQuery();
-		
-		boolean useradmin = false;
-		
-		while (resultSet.next()) {
-		useradmin = resultSet.getBoolean("useradmin");
-		}
-		
-		if(useradmin){
-			return true;
-		}
-			
-		return false;
-		
-	}
-	
-	
 	public ModelLogin getUserGeneric(String login) throws Exception {
 		ModelLogin modelLogin = new ModelLogin();
 
-		String sql = "SELECT login, senha, id, name, email FROM model_login WHERE login = (?) AND useradmin = false;";
+		String sql = "SELECT * FROM model_login WHERE login = (?) AND useradmin = false;";
 		PreparedStatement sttm = connection.prepareStatement(sql);
 		sttm.setString(1, login);
 		ResultSet resultSet = sttm.executeQuery();
@@ -104,8 +89,10 @@ public class daoUserRepository {
 			long id = resultSet.getLong("id");
 			String email = resultSet.getString("email");
 			String senha = resultSet.getString("senha");
+			String cargo = resultSet.getString("cargo");
+			String sexo = resultSet.getString("sexo");
 
-			modelLogin = new ModelLogin(id, name, email, loginUser, senha);
+			modelLogin = new ModelLogin(id, name, email, loginUser, senha, cargo, sexo);
 		}
 
 		return modelLogin;
@@ -114,7 +101,7 @@ public class daoUserRepository {
 	public ModelLogin getUserLogado(String login) throws Exception {
 		ModelLogin modelLogin = new ModelLogin();
 
-		String sql = "SELECT login, senha, id, name, email, useradmin FROM model_login WHERE login = (?);";
+		String sql = "SELECT * FROM model_login WHERE login = (?);";
 		PreparedStatement sttm = connection.prepareStatement(sql);
 		sttm.setString(1, login);
 		ResultSet resultSet = sttm.executeQuery();
@@ -126,7 +113,8 @@ public class daoUserRepository {
 			String email = resultSet.getString("email");
 			String senha = resultSet.getString("senha");
 			boolean userAdmin = resultSet.getBoolean("useradmin");
-			
+			String cargo = resultSet.getString("cargo");
+			String sexo = resultSet.getString("sexo");
 			
 
 			modelLogin.setId(id);
@@ -135,6 +123,8 @@ public class daoUserRepository {
 			modelLogin.setName(name);
 			modelLogin.setSenha(senha);
 			modelLogin.setUserAdmin(userAdmin);
+			modelLogin.setCargo(cargo);
+			modelLogin.setSexo(sexo);
 		}
 
 		return modelLogin;
@@ -156,8 +146,10 @@ public class daoUserRepository {
 			long id = resultSet.getLong("id");
 			String email = resultSet.getString("email");
 			String senha = resultSet.getString("senha");
-
-			modelLogin = new ModelLogin(id, name, email, loginUser, senha);
+			String cargo = resultSet.getString("cargo");
+			String sexo = resultSet.getString("sexo");
+			
+			modelLogin = new ModelLogin(id, name, email, loginUser, senha, cargo,sexo);
 		}
 
 		return modelLogin;
@@ -178,9 +170,10 @@ public class daoUserRepository {
 			long id = resultSet.getLong("id");
 			String email = resultSet.getString("email");
 			String senha = resultSet.getString("senha");
-			
+			String cargo = resultSet.getString("cargo");
+			String sexo = resultSet.getString("sexo");
 
-			modelLogin = new ModelLogin(id, name, email, loginUser, senha);
+			modelLogin = new ModelLogin(id, name, email, loginUser, senha, cargo, sexo);
 			users.add(modelLogin);
 		}
 
@@ -190,7 +183,7 @@ public class daoUserRepository {
 	public ModelLogin getUserId(String id, long userLogado) throws Exception {
 		ModelLogin modelLogin = new ModelLogin();
 
-		String sql = "SELECT login, senha, id, name, email FROM model_login WHERE id = (?) AND useradmin = false AND user_id =(?);";
+		String sql = "SELECT * FROM model_login WHERE id = (?) AND useradmin = false AND user_id =(?);";
 		PreparedStatement sttm = connection.prepareStatement(sql);
 		sttm.setLong(1, Long.parseLong(id));
 		sttm.setLong(2, userLogado);
@@ -202,8 +195,10 @@ public class daoUserRepository {
 			long idUser = resultSet.getLong("id");
 			String email = resultSet.getString("email");
 			String senha = resultSet.getString("senha");
-
-			modelLogin = new ModelLogin(idUser, name, email, loginUser, senha);
+			String cargo = resultSet.getString("cargo");
+			String sexo = resultSet.getString("sexo");
+			
+			modelLogin = new ModelLogin(idUser, name, email, loginUser, senha, cargo, sexo);
 		}
 
 		return modelLogin;
@@ -227,8 +222,10 @@ public class daoUserRepository {
 			long id = resultSet.getLong("id"); 
 			String email = resultSet.getString("email");
 			String senha = resultSet.getString("senha");
-
-			modelLogin = new ModelLogin(id, name, email, loginUser, senha);
+			String cargo = resultSet.getString("cargo");
+			String sexo = resultSet.getString("sexo");
+			
+			modelLogin = new ModelLogin(id, name, email, loginUser, senha, cargo, sexo);
 			listaUser.add(modelLogin);
 		}
 

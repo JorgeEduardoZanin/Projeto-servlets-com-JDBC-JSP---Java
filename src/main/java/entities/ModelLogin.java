@@ -13,6 +13,7 @@ public class ModelLogin implements Serializable {
 	private String login;
 	private String senha;
 	private String cargo;
+	private String sexo;
 	
 	private boolean userAdmin;
 	
@@ -21,13 +22,15 @@ public class ModelLogin implements Serializable {
 		
 	}
 	
-	public ModelLogin(Long id, String name, String email, String login, String senha) {
+	public ModelLogin(Long id, String name, String email, String login, String senha, String cargo, String sexo) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.email = email;
 		this.login = login;
 		this.senha = senha;
+		this.cargo = cargo;
+		this.sexo = sexo;
 	}
 
 	public Long getId() {
@@ -84,6 +87,14 @@ public class ModelLogin implements Serializable {
 
 	public void setCargo(String cargo) {
 		this.cargo = cargo;
+	}
+
+	public String getSexo() {
+		return sexo;
+	}
+
+	public void setSexo(String sexo) {
+		this.sexo = sexo;
 	}
 
 	@Override

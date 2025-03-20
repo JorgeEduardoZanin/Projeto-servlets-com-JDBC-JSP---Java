@@ -53,7 +53,7 @@
 					class="pcoded-mcaret"></span>
 			</a>
 				<ul class="pcoded-submenu">
-				<c:if test="${isAdmin}">
+				<c:if test="${cargo == 'Administrador'}">
 					<li class=" "><a
 						href="<%=request.getContextPath()%>/ServletUsuarioController?acao=listaUsers"
 						class="waves-effect waves-dark"> <span class="pcoded-micon"><i
