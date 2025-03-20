@@ -10,15 +10,20 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import dao.daoUserRepository;
 import entities.ModelLogin;
+import filter.FilterAutenticacao;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+@MultipartConfig
 public class ServletUsuarioController extends ServletGenericUtil {
 	private static final long serialVersionUID = 1L;
 
+	
+	private FilterAutenticacao filtro = new FilterAutenticacao();
 	private daoUserRepository daoUser = new daoUserRepository();
 	
 
@@ -26,6 +31,8 @@ public class ServletUsuarioController extends ServletGenericUtil {
 			throws ServletException, IOException {
 
 		try {
+			
+			
 			String acao = request.getParameter("acao");
 
 			if (acao != null && !acao.isEmpty()) {

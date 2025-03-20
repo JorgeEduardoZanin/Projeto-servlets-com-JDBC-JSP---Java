@@ -29,7 +29,7 @@ public class daoUserRepository {
 			String name = modelLogin.getName();
 			String email = modelLogin.getEmail();
 			String cargo = modelLogin.getCargo();
-			String sexo = modelLogin.getSenha();
+			String sexo = modelLogin.getSexo();
 			
 			if(modelLogin.newId()) {
 			String sql = "INSERT INTO model_login(login, senha, name, email, user_id, cargo, sexo) VALUES (?, ?, ?, ?, ?, ?, ?);";

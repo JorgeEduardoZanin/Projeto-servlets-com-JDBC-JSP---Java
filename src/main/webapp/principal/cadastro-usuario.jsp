@@ -41,7 +41,7 @@
 												<div class="card">
 													<div class="card-block">
 														<h4 class="sub-title">Dados do usuário</h4>
-														<form class="form-material"
+														<form class="form-material" enctype="multipart/form-data"
 															action="<%=request.getContextPath()%>/ServletUsuarioController"
 															method="post" id="formUser">
 
@@ -100,18 +100,17 @@ if (modelLogin != null && modelLogin.getCargo().equals("Financeiro")) {
 																<input type="radio" name="sexo" value="Masculino"
 																	<%modelLogin = (ModelLogin) request.getAttribute("modelLogin");
 
-if (modelLogin != null && modelLogin.getCargo().equals("Masculino")) {
+if (modelLogin != null && modelLogin.getSexo().equals("Masculino")) {
 	out.print("");
-	out.print("selected=\"selected\"");
+	out.print("checked=\"checked\"");
 	out.print("");
 }%>>
-																Masculino</> <input type="radio" name="sexo"
-																	value="Feminino"
+																Masculino</> <input type="radio" name="sexo" value="Feminino"
 																	<%modelLogin = (ModelLogin) request.getAttribute("modelLogin");
 
-if (modelLogin != null && modelLogin.getCargo().equals("Feminino")) {
+if (modelLogin != null && modelLogin.getSexo().equals("Feminino")) {
 	out.print("");
-	out.print("selected=\"selected\"");
+	out.print("checked=\"checked\"");
 	out.print("");
 }%>>Feminino</>
 															</div>
@@ -122,6 +121,14 @@ if (modelLogin != null && modelLogin.getCargo().equals("Feminino")) {
 																	class="form-control" required="required"
 																	value="${modelLogin.login}"> <span
 																	class="form-bar"></span> <label class="float-label">Login</label>
+															</div>
+															
+															<div class="form-group form-default form-static-label input-group mb-3">
+															
+															 <div class="input-group-prepend">
+															 	<img alt="Imagem User" src="" width="70px">
+															 </div>
+															<input type="file" class="form-control-file">
 															</div>
 
 

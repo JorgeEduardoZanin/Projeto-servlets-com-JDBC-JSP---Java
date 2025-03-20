@@ -15,7 +15,13 @@ public class ModelLogin implements Serializable {
 	private String cargo;
 	private String sexo;
 	
+	private String fotoUser;
+	private String extensaoFotoUser;
+	
 	private boolean userAdmin;
+	
+	
+	
 	
 	
 	public ModelLogin () {
@@ -95,6 +101,22 @@ public class ModelLogin implements Serializable {
 
 	public void setSexo(String sexo) {
 		this.sexo = sexo;
+	}
+
+	public String getFotoUser() {
+		return fotoUser;
+	} 
+
+	public void setFotoUser(String fotoUser) {
+		this.fotoUser = fotoUser;
+	}
+
+	public String getExtensaoFotoUser() {
+		return extensaoFotoUser;
+	}
+
+	public void setExtensaoFotoUser(String extensaoFotoUser) {
+		this.extensaoFotoUser = extensaoFotoUser;
 	}
 
 	@Override

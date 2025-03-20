@@ -60,7 +60,7 @@ public class ServletLogin extends HttpServlet {
             	 RequestDispatcher redirecionar = request.getRequestDispatcher("/index.jsp");
                  request.setAttribute("msg", "Insira a senha e login corretamente!");
                  redirecionar.forward(request, response);
-                 return;
+                 return;    
             }
            
             ModelLogin useradm = daoUser.getUserLogado(login);

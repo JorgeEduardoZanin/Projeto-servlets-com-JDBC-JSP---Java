@@ -4,6 +4,9 @@
   <welcome-file-list>
     <welcome-file>index.jsp</welcome-file>
   </welcome-file-list>
+  <session-config>
+    <session-timeout>30</session-timeout> <!-- tempo em minutos -->
+  </session-config>
   <servlet>
     <description></description>
     <display-name>ServletLogin</display-name>
@@ -22,7 +25,7 @@
   </filter>
   <filter-mapping>
     <filter-name>FilterAutenticacao</filter-name>
-    <url-pattern>/principal/*</url-pattern>
+    <url-pattern>/*</url-pattern>
   </filter-mapping>
   <servlet>
     <description></description>
