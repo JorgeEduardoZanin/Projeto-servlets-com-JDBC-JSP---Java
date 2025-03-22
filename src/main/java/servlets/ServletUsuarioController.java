@@ -39,26 +39,20 @@ public class ServletUsuarioController extends ServletGenericUtil {
 			
 			
 			String acao = request.getParameter("acao");
-
+			String idBruto = request.getParameter("id");
+			Long id = idBruto != null && !idBruto.isEmpty() ? Long.parseLong(idBruto) : null;
+			
 			if (acao != null && !acao.isEmpty()) {
 
 				switch (acao.toLowerCase()) {
 
 				case "deletarajax":
-					//para listar todos os users
-					List<ModelLogin>  users = daoUser.listaUsers(super.getUserLogado(request));
-					request.setAttribute("modelLogins", users);
-					
-					String idBruto = request.getParameter("id");
-					Long id = idBruto != null && !idBruto.isEmpty() ? Long.parseLong(idBruto) : null;
+				
 					daoUser.delete(id);
 					response.getWriter().write("Usuario excluido com sucesso!");
 					break;
 
 				case "buscaruserajax":
-					//para listar todos os users
-					List<ModelLogin>  usersList = daoUser.listaUsers(super.getUserLogado(request));
-					request.setAttribute("modelLogins", usersList);
 					
 					String nomeBusca = request.getParameter("nomeBusca");
 					List<ModelLogin> dadosJsonUser = daoUser.getUserList(nomeBusca, super.getUserLogado(request));
@@ -73,6 +67,7 @@ public class ServletUsuarioController extends ServletGenericUtil {
 					//para listar todos os users
 					List<ModelLogin> usersListVer = daoUser.listaUsers(super.getUserLogado(request));
 					request.setAttribute("modelLogins", usersListVer);
+					request.setAttribute("totalPaginas", daoUser.totalPaginas(super.getUserLogado(request)));
 
 					String idUser = request.getParameter("id");
 					ModelLogin modelLogin = daoUser.getUserId(idUser, super.getUserLogado(request) );
@@ -86,9 +81,22 @@ public class ServletUsuarioController extends ServletGenericUtil {
 					//para listar todos os users quando a pagina e carregada
 					List<ModelLogin> usersListAll = daoUser.listaUsers(super.getUserLogado(request));
 
+					request.setAttribute("totalPaginas", daoUser.totalPaginas(super.getUserLogado(request)));
 					request.setAttribute("modelLogins", usersListAll);
 					request.getRequestDispatcher("principal/cadastro-usuario.jsp").forward(request, response);
 					break;
+					
+				case "downloadfoto":
+					modelLogin = daoUser.getUserId(idBruto, super.getUserLogado(request));
+					
+					if(modelLogin.getExtensaoFotoUser() != null && !modelLogin.getExtensaoFotoUser().isEmpty()) {
+						
+						response.setHeader("Content-Disposition", "attachment;filename=arquivo." +modelLogin.getExtensaoFotoUser());
+						new Base64();
+						response.getOutputStream().write(Base64.decodeBase64(modelLogin.getFotoUser().split("\\,")[1]));					
+						
+					}
+					break;	 
 				default:
 					break;
 				}
@@ -118,10 +126,16 @@ public class ServletUsuarioController extends ServletGenericUtil {
 			String login = request.getParameter("login");
 			String cargo = request.getParameter("cargo");
 			String sexo = request.getParameter("sexo");
+			String numero = request.getParameter("numero");
+			String logradouro = request.getParameter("logradouro");
+			String bairro = request.getParameter("bairro");
+			String localidade = request.getParameter("localidade");
+			String UF = request.getParameter("UF");
+			String cep = request.getParameter("cep");
 			
 			Long id = idBruto != null && !idBruto.isEmpty() ? Long.parseLong(idBruto) : null;
 			
-			ModelLogin modelLogin = new ModelLogin(id, name, email, login, senha, cargo, sexo);
+			ModelLogin modelLogin = new ModelLogin(id, name, email, login, senha, cargo, sexo, numero, logradouro, bairro, localidade, UF, cep);
 			
 			if(JakartaServletFileUpload.isMultipartContent(request)) {
 				Part part = request.getPart("filefoto");
@@ -130,7 +144,6 @@ public class ServletUsuarioController extends ServletGenericUtil {
 				byte[] foto = IOUtils.toByteArray(part.getInputStream());
 				new Base64();
 				String imagembase64 = "data:image/"+part.getContentType().split("\\/")[1]+";base64,"+Base64.encodeBase64String(foto);
-				System.out.println(imagembase64);
 				
 				modelLogin.setFotoUser(imagembase64);
 				modelLogin.setExtensaoFotoUser(part.getContentType().split("\\/")[1]);
@@ -149,7 +162,6 @@ public class ServletUsuarioController extends ServletGenericUtil {
 				request.setAttribute("msgLoginUnico", "Esse usuario ja existe!");
 				request.setAttribute("modelLogin", modelLogin);
 				request.getRequestDispatcher("principal/cadastro-usuario.jsp").forward(request, response);
-				String bata;
 				return;
 			}
 			if (!modelLogin.newId()) {

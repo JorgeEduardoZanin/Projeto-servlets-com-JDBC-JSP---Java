@@ -97,6 +97,48 @@ if (modelLogin != null && modelLogin.getCargo().equals("Financeiro")) {
 															</div>
 
 															<div class="form-group form-default form-static-label">
+																<input onblur="pesquisaCep();" type="text" name="cep" id="cep"
+																	class="form-control" required="required"
+																	value="${modelLogin.cep}"> <span
+																	class="form-bar"></span> <label class="float-label">CEP</label>
+															</div>
+
+															<div class="form-group form-default form-static-label">
+																<input type="text" name="localidade" id="localidade"
+																	class="form-control" required="required"
+																	value="${modelLogin.localidade}"> <span
+																	class="form-bar"></span> <label class="float-label">Cidade</label>
+															</div>
+
+															<div class="form-group form-default form-static-label">
+																<input type="text" name="logradouro" id="logradouro"
+																	class="form-control" required="required"
+																	value="${modelLogin.logradouro}"> <span
+																	class="form-bar"></span> <label class="float-label">Rua</label>
+															</div>
+
+															<div class="form-group form-default form-static-label">
+																<input type="text" name="bairro" id="bairro"
+																	class="form-control" required="required"
+																	value="${modelLogin.bairro}"> <span
+																	class="form-bar"></span> <label class="float-label">Bairro</label>
+															</div>
+
+															<div class="form-group form-default form-static-label">
+																<input type="text" name="UF" id="UF"
+																	class="form-control" required="required"
+																	value="${modelLogin.UF}"> <span
+																	class="form-bar"></span> <label class="float-label">Estado</label>
+															</div>
+
+															<div class="form-group form-default form-static-label">
+																<input type="text" name="numero" id="numero"
+																	class="form-control" required="required"
+																	value="${modelLogin.numero}"> <span
+																	class="form-bar"></span> <label class="float-label">Numero</label>
+															</div>
+
+															<div class="form-group form-default form-static-label">
 																<input type="radio" name="sexo" value="Masculino"
 																	<%modelLogin = (ModelLogin) request.getAttribute("modelLogin");
 
@@ -128,16 +170,21 @@ if (modelLogin != null && modelLogin.getSexo().equals("Feminino")) {
 																class="form-group form-default form-static-label input-group mb-3">
 
 																<div class="input-group-prepend">
-																	<c:if test="${modelLogin.fotoUser != '' && modelLogin.fotoUser != null}">
-																		<img alt="Imagem User" src="${modelLogin.fotoUser}"
+																	<c:if
+																		test="${modelLogin.fotoUser != '' && modelLogin.fotoUser != null}">
+																		<a
+																			href="<%=request.getContextPath()%>/ServletUsuarioController?acao=downloadFoto&id=${modelLogin.id}">
+																			<img alt="Imagem User" src="${modelLogin.fotoUser}"
 																			width="70px" accept="image/*" id="fotoembase64">
+																		</a>
 																	</c:if>
-																	<c:if test="${modelLogin.fotoUser == '' || modelLogin.fotoUser == null}">
+																	<c:if
+																		test="${modelLogin.fotoUser == '' || modelLogin.fotoUser == null}">
 																		<img alt="Imagem User" src="assets/images/faq_man.png"
 																			width="70px" accept="image/*" id="fotoembase64">
 																	</c:if>
-																	
-																	
+
+
 																</div>
 																<input type="file"
 																	class="form-control-file imagem-input" name="filefoto"
@@ -324,6 +371,22 @@ if (modelLogin != null && modelLogin.getSexo().equals("Feminino")) {
 	<jsp:include page="javascript.jsp"></jsp:include>
 
 	<script>
+	
+		function pesquisaCep(){
+			var cep = $('#cep').val();
+			
+			$.getJSON("https://viacep.com.br/ws/"+ cep +"/json/?callback=?",function(dados){
+				if (!("erro" in dados)) {
+					$("#cep").val(dados.cep);
+					$("#logradouro").val(dados.logradouro);
+                    $("#bairro").val(dados.bairro);
+                    $("#localidade").val(dados.localidade);
+                    $("#UF").val(dados.uf);
+				} 
+				
+				
+			});
+		}
 	
 		function visualizarImagem(fotoembase64, filefoto){
 			

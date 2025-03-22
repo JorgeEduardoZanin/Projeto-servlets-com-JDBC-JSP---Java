@@ -10,15 +10,72 @@ import java.util.List;
 import connection.SingleConnection;
 import entities.ModelLogin;
 import net.bytebuddy.dynamic.scaffold.MethodRegistry.Prepared;
+import services.UserService;
 
 public class daoUserRepository {
 
 	private Connection connection;
+	private UserService userSerivce;
 
 	public daoUserRepository() {
 		connection = SingleConnection.getConnection();
 	}
+	
+	public List<ModelLogin> resultSetList(ResultSet resultSet) throws SQLException {
+		ModelLogin modelLogin = new ModelLogin();
+		List<ModelLogin> lista = new ArrayList<ModelLogin>();
+		
+		while (resultSet.next()) {
+			String name = resultSet.getString("name");
+			String loginUser = resultSet.getString("login");
+			long id = resultSet.getLong("id");
+			String email = resultSet.getString("email");
+			String senha = resultSet.getString("senha");
+			String cargo = resultSet.getString("cargo");
+			String sexo = resultSet.getString("sexo");
+			String UF = resultSet.getString("UF");
+			String bairro = resultSet.getString("bairro");
+			String numero = resultSet.getString("numero");
+			String logradouro = resultSet.getString("logradouro");
+			String localidade = resultSet.getString("localidade");
+			String cep = resultSet.getString("cep");
+			
+			modelLogin = new ModelLogin(id, name, email, loginUser, senha, cargo, sexo, UF, bairro, numero, logradouro, localidade, cep);
+			lista.add(modelLogin);
+			
+		}
+		
+		return lista;
+	}
 
+	public ModelLogin resultSet(ResultSet resultSet) throws SQLException {
+		ModelLogin modelLogin = new ModelLogin();
+		
+		while (resultSet.next()) {
+			String name = resultSet.getString("name");
+			String loginUser = resultSet.getString("login");
+			long id = resultSet.getLong("id");
+			String email = resultSet.getString("email");
+			String senha = resultSet.getString("senha");
+			String cargo = resultSet.getString("cargo");
+			String sexo = resultSet.getString("sexo");
+			String fotoUser = resultSet.getString("fotouser");
+			String UF = resultSet.getString("UF");
+			String bairro = resultSet.getString("bairro");
+			String numero = resultSet.getString("numero");
+			String logradouro = resultSet.getString("logradouro");
+			String localidade = resultSet.getString("localidade");
+			String cep = resultSet.getString("cep");
+			String extensaofotouser = resultSet.getString("extensaofotouser");
+			
+			modelLogin = new ModelLogin(id, name, email, loginUser, senha, cargo, sexo, UF, bairro, numero, logradouro, localidade, cep);
+			modelLogin.setFotoUser(fotoUser);
+			modelLogin.setExtensaoFotoUser(extensaofotouser);
+		}
+		
+		return modelLogin;
+	}
+	
 	public void updateFoto(ModelLogin modelLogin) throws SQLException {
 
 		if (modelLogin.getFotoUser() != null && !modelLogin.getFotoUser().isEmpty()) {
@@ -45,9 +102,15 @@ public class daoUserRepository {
 			String email = modelLogin.getEmail();
 			String cargo = modelLogin.getCargo();
 			String sexo = modelLogin.getSexo();
+			String UF = modelLogin.getUF();
+			String cep = modelLogin.getCep();
+			String logradouro = modelLogin.getLogradouro();
+			String numero = modelLogin.getNumero();
+			String bairro = modelLogin.getSexo();
+			String localidade = modelLogin.getLocalidade();
 
 			if (modelLogin.newId()) {
-				String sql = "INSERT INTO model_login(login, senha, name, email, user_id, cargo, sexo) VALUES (?, ?, ?, ?, ?, ?, ?);";
+				String sql = "INSERT INTO model_login(login, senha, name, email, user_id, cargo, sexo, UF, cep, logradouro, numero, bairro, localidade) VALUES (?, ?, ?, ?, ?, ?, ?, ? ,? ,?, ? , ?, ?);";
 				sttm = connection.prepareStatement(sql);
 
 				sttm.setString(1, login);
@@ -57,6 +120,12 @@ public class daoUserRepository {
 				sttm.setLong(5, userLogado);
 				sttm.setString(6, cargo);
 				sttm.setString(7, sexo);
+				sttm.setString(8, UF);
+				sttm.setString(9, cep);
+				sttm.setString(10, logradouro);
+				sttm.setString(11, numero);
+				sttm.setString(12, bairro);
+				sttm.setString(13, localidade);
 
 				sttm.execute();
 				connection.commit();
@@ -66,16 +135,22 @@ public class daoUserRepository {
 				return this.getUserGeneric(modelLogin.getLogin());
 			}
 
-			String sql = "UPDATE model_login SET login=(?), senha=(?), name=(?), email=(?), cargo=(?), sexo=(?) WHERE id=(?);";
+			String sql = "UPDATE model_login SET login=(?), senha=(?), name=(?), email=(?), cargo=(?), sexo=(?), UF=(?), cep=(?), logradouro=(?), numero=(?), bairro=(?), localidade=(?) WHERE id=(?);";
 			sttm = connection.prepareStatement(sql);
 
 			sttm.setString(1, login);
 			sttm.setString(2, senha);
 			sttm.setString(3, name);
 			sttm.setString(4, email);
-			sttm.setLong(7, modelLogin.getId());
+			sttm.setLong(13, modelLogin.getId());
 			sttm.setString(5, cargo);
 			sttm.setString(6, sexo);
+			sttm.setString(7, UF);
+			sttm.setString(8, cep);
+			sttm.setString(9, logradouro);
+			sttm.setString(10, numero);
+			sttm.setString(11, bairro);
+			sttm.setString(12, localidade);
 
 			sttm.executeUpdate();
 			connection.commit();
@@ -93,116 +168,68 @@ public class daoUserRepository {
 	}
 
 	public ModelLogin getUserGeneric(String login) throws Exception {
-		ModelLogin modelLogin = new ModelLogin();
 
 		String sql = "SELECT * FROM model_login WHERE login = (?) AND useradmin = false;";
 		PreparedStatement sttm = connection.prepareStatement(sql);
 		sttm.setString(1, login);
 		ResultSet resultSet = sttm.executeQuery();
 
-		while (resultSet.next()) {
-			String name = resultSet.getString("name");
-			String loginUser = resultSet.getString("login");
-			long id = resultSet.getLong("id");
-			String email = resultSet.getString("email");
-			String senha = resultSet.getString("senha");
-			String cargo = resultSet.getString("cargo");
-			String sexo = resultSet.getString("sexo");
-			String fotoUser = resultSet.getString("fotouser");
-			modelLogin.setFotoUser(fotoUser);
-
-			modelLogin = new ModelLogin(id, name, email, loginUser, senha, cargo, sexo);
-		}
-
-		return modelLogin;
+		return this.resultSet(resultSet);
 	}
 
 	public ModelLogin getUserLogado(String login) throws Exception {
-		ModelLogin modelLogin = new ModelLogin();
-
+		
 		String sql = "SELECT * FROM model_login WHERE login = (?);";
 		PreparedStatement sttm = connection.prepareStatement(sql);
 		sttm.setString(1, login);
 		ResultSet resultSet = sttm.executeQuery();
 
-		while (resultSet.next()) {
-			String name = resultSet.getString("name");
-			String loginUser = resultSet.getString("login");
-			long id = resultSet.getLong("id");
-			String email = resultSet.getString("email");
-			String senha = resultSet.getString("senha");
-			boolean userAdmin = resultSet.getBoolean("useradmin");
-			String cargo = resultSet.getString("cargo");
-			String sexo = resultSet.getString("sexo");
-			String fotoUser = resultSet.getString("fotouser");
-
-			modelLogin.setFotoUser(fotoUser);
-			modelLogin.setId(id);
-			modelLogin.setLogin(loginUser);
-			modelLogin.setEmail(email);
-			modelLogin.setName(name);
-			modelLogin.setSenha(senha);
-			modelLogin.setUserAdmin(userAdmin);
-			modelLogin.setCargo(cargo);
-			modelLogin.setSexo(sexo);
-		}
-
-		return modelLogin;
+		return this.resultSet(resultSet);
 	}
 
 	public ModelLogin getUser(String login, long userLogado) throws Exception {
-		ModelLogin modelLogin = new ModelLogin();
 
-		String sql = "SELECT login, senha, id, name, email FROM model_login WHERE login = (?) AND useradmin = false AND user_id = (?);";
+		String sql = "SELECT * FROM model_login WHERE login = (?) AND useradmin = false AND user_id = (?);";
 		PreparedStatement sttm = connection.prepareStatement(sql);
 		sttm.setString(1, login);
 		sttm.setLong(2, userLogado);
 		ResultSet resultSet = sttm.executeQuery();
 
-		while (resultSet.next()) {
-			String name = resultSet.getString("name");
-			String loginUser = resultSet.getString("login");
-			long id = resultSet.getLong("id");
-			String email = resultSet.getString("email");
-			String senha = resultSet.getString("senha");
-			String cargo = resultSet.getString("cargo");
-			String sexo = resultSet.getString("sexo");
-			String fotoUser = resultSet.getString("fotouser");
+		return this.resultSet(resultSet);
+	}
+	
+	public int totalPaginas(long userLogado) throws Exception{
+		
+		String sql = "SELECT count(1) as total FROM model_login WHERE user_id =(?);";
+		PreparedStatement sttm = connection.prepareStatement(sql);
+		sttm.setLong(1, userLogado);
+		ResultSet resultSet = sttm.executeQuery();
+		
+		return userSerivce.totalPaginasPaginacao(resultSet);
+		
+	}
+	
+	public List<ModelLogin> listaUsersPaginacao(Long userLogado, Integer offset) throws Exception {
+		String sql = "SELECT * FROM model_login WHERE useradmin = false AND user_id = (?) ORDER BY name LIMIT 5 OFFSET ?;";
+		PreparedStatement sttm = connection.prepareStatement(sql);
+		sttm.setLong(1, userLogado);
+		sttm.setInt(2, offset);
+		ResultSet resultSet = sttm.executeQuery();
 
-			modelLogin.setFotoUser(fotoUser);
-
-			modelLogin = new ModelLogin(id, name, email, loginUser, senha, cargo, sexo);
-		}
-
-		return modelLogin;
+		return this.resultSetList(resultSet);
 	}
 
 	public List<ModelLogin> listaUsers(Long userLogado) throws Exception {
-		ModelLogin modelLogin = new ModelLogin();
-		List<ModelLogin> users = new ArrayList<>();
-		String sql = "SELECT * FROM model_login WHERE useradmin = false AND user_id =(?) ORDER BY id ASC;";
+		String sql = "SELECT * FROM model_login WHERE useradmin = false AND user_id =(?) ORDER BY id ASC LIMIT 5;";
 		PreparedStatement sttm = connection.prepareStatement(sql);
 		sttm.setLong(1, userLogado);
 		ResultSet resultSet = sttm.executeQuery();
 
-		while (resultSet.next()) {
-			String name = resultSet.getString("name");
-			String loginUser = resultSet.getString("login");
-			long id = resultSet.getLong("id");
-			String email = resultSet.getString("email");
-			String senha = resultSet.getString("senha");
-			String cargo = resultSet.getString("cargo");
-			String sexo = resultSet.getString("sexo");
-
-			modelLogin = new ModelLogin(id, name, email, loginUser, senha, cargo, sexo);
-			users.add(modelLogin);
-		}
-
-		return users;
+		return this.resultSetList(resultSet);
 	}
+	
 
 	public ModelLogin getUserId(String id, long userLogado) throws Exception {
-		ModelLogin modelLogin = new ModelLogin();
 
 		String sql = "SELECT * FROM model_login WHERE id = (?) AND useradmin = false AND user_id =(?);";
 		PreparedStatement sttm = connection.prepareStatement(sql);
@@ -210,49 +237,18 @@ public class daoUserRepository {
 		sttm.setLong(2, userLogado);
 		ResultSet resultSet = sttm.executeQuery();
 
-		while (resultSet.next()) {
-			String name = resultSet.getString("name");
-			String loginUser = resultSet.getString("login");
-			long idUser = resultSet.getLong("id");
-			String email = resultSet.getString("email");
-			String senha = resultSet.getString("senha");
-			String cargo = resultSet.getString("cargo");
-			String sexo = resultSet.getString("sexo");
-			String fotoUser = resultSet.getString("fotouser");
-
-		
-			modelLogin = new ModelLogin(idUser, name, email, loginUser, senha, cargo, sexo);
-			modelLogin.setFotoUser(fotoUser);
-		}
-
-		return modelLogin;
+		return this.resultSet(resultSet);
 	}
 
 	public List<ModelLogin> getUserList(String nameUser, long userLogado) throws Exception {
 
-		List<ModelLogin> listaUser = new ArrayList<ModelLogin>();
-		ModelLogin modelLogin = new ModelLogin();
-
-		String sql = "SELECT * FROM model_login WHERE upper(name) like upper(?) AND useradmin = false AND user_id =(?)";
+		String sql = "SELECT * FROM model_login WHERE upper(name) like upper(?) AND useradmin = false AND user_id =(?) LIMIT 5";
 		PreparedStatement sttm = connection.prepareStatement(sql);
 		sttm.setString(1, "%" + nameUser + "%");
 		sttm.setLong(2, userLogado);
 		ResultSet resultSet = sttm.executeQuery();
 
-		while (resultSet.next()) {
-			String name = resultSet.getString("name");
-			String loginUser = resultSet.getString("login");
-			long id = resultSet.getLong("id");
-			String email = resultSet.getString("email");
-			String senha = resultSet.getString("senha");
-			String cargo = resultSet.getString("cargo");
-			String sexo = resultSet.getString("sexo");
-
-			modelLogin = new ModelLogin(id, name, email, loginUser, senha, cargo, sexo);
-			listaUser.add(modelLogin);
-		}
-
-		return listaUser;
+		return this.resultSetList(resultSet);
 	}
 
 	public boolean loginUnico(String login) throws Exception {
