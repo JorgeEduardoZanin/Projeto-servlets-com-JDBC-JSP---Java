@@ -105,7 +105,8 @@ if (modelLogin != null && modelLogin.getSexo().equals("Masculino")) {
 	out.print("checked=\"checked\"");
 	out.print("");
 }%>>
-																Masculino</> <input type="radio" name="sexo" value="Feminino"
+																Masculino</> <input type="radio" name="sexo"
+																	value="Feminino"
 																	<%modelLogin = (ModelLogin) request.getAttribute("modelLogin");
 
 if (modelLogin != null && modelLogin.getSexo().equals("Feminino")) {
@@ -122,13 +123,26 @@ if (modelLogin != null && modelLogin.getSexo().equals("Feminino")) {
 																	value="${modelLogin.login}"> <span
 																	class="form-bar"></span> <label class="float-label">Login</label>
 															</div>
-															
-															<div class="form-group form-default form-static-label input-group mb-3">
-															
-															 <div class="input-group-prepend">
-															 	<img alt="Imagem User" src="" width="70px">
-															 </div>
-															<input type="file" class="form-control-file">
+
+															<div
+																class="form-group form-default form-static-label input-group mb-3">
+
+																<div class="input-group-prepend">
+																	<c:if test="${modelLogin.fotoUser != '' && modelLogin.fotoUser != null}">
+																		<img alt="Imagem User" src="${modelLogin.fotoUser}"
+																			width="70px" accept="image/*" id="fotoembase64">
+																	</c:if>
+																	<c:if test="${modelLogin.fotoUser == '' || modelLogin.fotoUser == null}">
+																		<img alt="Imagem User" src="assets/images/faq_man.png"
+																			width="70px" accept="image/*" id="fotoembase64">
+																	</c:if>
+																	
+																	
+																</div>
+																<input type="file"
+																	class="form-control-file imagem-input" name="filefoto"
+																	id="filefoto"
+																	onchange="visualizarImagem('fotoembase64','filefoto')">
 															</div>
 
 
@@ -301,11 +315,36 @@ if (modelLogin != null && modelLogin.getSexo().equals("Feminino")) {
 	margin-top: 20px;
 	padding: 10px 20px;
 }
+
+.imagem-input {
+	margin: 20px;
+}
 </style>
 
 	<jsp:include page="javascript.jsp"></jsp:include>
 
 	<script>
+	
+		function visualizarImagem(fotoembase64, filefoto){
+			
+			alert("teste");
+			var preview = document.getElementById(fotoembase64);
+			var fileUser = document.getElementById(filefoto).files[0];
+			var reader = new FileReader();
+			
+			reader.onloadend = function(){
+				preview.src = reader.result;//carrega a imagem na tela	
+			}
+			
+			if(fileUser){
+				reader.readAsDataURL(fileUser);//preview da imagem
+				 
+			}else{
+				preview.src='';
+			}
+		}
+	
+	
 		function togglePassword() {
 			var senhaInput = document.getElementById("senha");
 			var eyeIcon = document.getElementById("eye-icon");

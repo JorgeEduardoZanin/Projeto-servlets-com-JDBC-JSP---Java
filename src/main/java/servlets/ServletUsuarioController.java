@@ -4,6 +4,11 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
+import org.apache.commons.fileupload2.jakarta.JakartaServletFileUpload;
+import org.apache.tomcat.jakartaee.commons.compress.utils.IOUtils;
+import org.apache.tomcat.util.codec.binary.Base64;
+
+import jakarta.servlet.http.Part;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -23,7 +28,7 @@ public class ServletUsuarioController extends ServletGenericUtil {
 	private static final long serialVersionUID = 1L;
 
 	
-	private FilterAutenticacao filtro = new FilterAutenticacao();
+
 	private daoUserRepository daoUser = new daoUserRepository();
 	
 
@@ -113,12 +118,28 @@ public class ServletUsuarioController extends ServletGenericUtil {
 			String login = request.getParameter("login");
 			String cargo = request.getParameter("cargo");
 			String sexo = request.getParameter("sexo");
-
+			
 			Long id = idBruto != null && !idBruto.isEmpty() ? Long.parseLong(idBruto) : null;
+			
 			ModelLogin modelLogin = new ModelLogin(id, name, email, login, senha, cargo, sexo);
+			
+			if(JakartaServletFileUpload.isMultipartContent(request)) {
+				Part part = request.getPart("filefoto");
+				
+				if(part.getSize() > 0) {
+				byte[] foto = IOUtils.toByteArray(part.getInputStream());
+				new Base64();
+				String imagembase64 = "data:image/"+part.getContentType().split("\\/")[1]+";base64,"+Base64.encodeBase64String(foto);
+				System.out.println(imagembase64);
+				
+				modelLogin.setFotoUser(imagembase64);
+				modelLogin.setExtensaoFotoUser(part.getContentType().split("\\/")[1]);
+				
+				}
+			}
 
 			boolean loginUnico = daoUser.loginUnico(login);
-
+			String use;
 			if (loginUnico == true && modelLogin.getId() == null) {
 				//para listar todos os users quando o login e igual a um ja criado
 				List<ModelLogin> usersListVer = daoUser.listaUsers(super.getUserLogado(request));
@@ -128,6 +149,7 @@ public class ServletUsuarioController extends ServletGenericUtil {
 				request.setAttribute("msgLoginUnico", "Esse usuario ja existe!");
 				request.setAttribute("modelLogin", modelLogin);
 				request.getRequestDispatcher("principal/cadastro-usuario.jsp").forward(request, response);
+				String bata;
 				return;
 			}
 			if (!modelLogin.newId()) {
