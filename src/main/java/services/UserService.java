@@ -8,6 +8,7 @@ public class UserService {
 	
 	public int totalPaginasPaginacao(ResultSet resultSet) throws SQLException{
 		
+		resultSet.next();
 		Double cadastro = resultSet.getDouble("total");
 		Double cadastroPorPagina = 5.0;
 		

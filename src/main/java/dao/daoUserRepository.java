@@ -15,7 +15,7 @@ import services.UserService;
 public class daoUserRepository {
 
 	private Connection connection;
-	private UserService userSerivce;
+	private UserService userService = new UserService();
 
 	public daoUserRepository() {
 		connection = SingleConnection.getConnection();
@@ -205,7 +205,7 @@ public class daoUserRepository {
 		sttm.setLong(1, userLogado);
 		ResultSet resultSet = sttm.executeQuery();
 		
-		return userSerivce.totalPaginasPaginacao(resultSet);
+		return userService.totalPaginasPaginacao(resultSet);
 		
 	}
 	

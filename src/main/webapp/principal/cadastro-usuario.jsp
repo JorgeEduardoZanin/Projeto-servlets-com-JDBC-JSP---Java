@@ -97,8 +97,8 @@ if (modelLogin != null && modelLogin.getCargo().equals("Financeiro")) {
 															</div>
 
 															<div class="form-group form-default form-static-label">
-																<input onblur="pesquisaCep();" type="text" name="cep" id="cep"
-																	class="form-control" required="required"
+																<input onblur="pesquisaCep();" type="text" name="cep"
+																	id="cep" class="form-control" required="required"
 																	value="${modelLogin.cep}"> <span
 																	class="form-bar"></span> <label class="float-label">CEP</label>
 															</div>
@@ -249,6 +249,23 @@ if (modelLogin != null && modelLogin.getSexo().equals("Feminino")) {
 												</tbody>
 											</table>
 										</div>
+
+										<nav aria-label="Page navigation example">
+											<ul class="pagination">
+
+												<%			
+												int totalPaginas = (int) request.getAttribute("totalPaginas");
+												
+												for(int i = 0; i < totalPaginas; i++){
+													String url = request.getContextPath()+"/ServletUsuarioController?acao=paginacao&pagina="+(i * 5);
+													out.print("<li class=\"page-item\"><a class=\"page-link\" href=\""+url+"\">"+(i+1)+"</a></li>");
+												}
+												%>
+
+
+												<li class="page-item"><a class="page-link" href="#">1</a></li>
+											</ul>
+										</nav>
 
 									</div>
 

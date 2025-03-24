@@ -97,6 +97,15 @@ public class ServletUsuarioController extends ServletGenericUtil {
 						
 					}
 					break;	 
+					
+				case "paginacao":
+					Integer offset = Integer.parseInt(request.getParameter("pagina"));
+					
+					List<ModelLogin> modelLoginList = daoUser.listaUsersPaginacao(this.getUserLogado(request), offset);
+					request.setAttribute("totalPaginas", daoUser.totalPaginas(super.getUserLogado(request)));
+					request.setAttribute("modelLogins", modelLoginList);
+					request.getRequestDispatcher("principal/cadastro-usuario.jsp").forward(request, response);
+					break;	 
 				default:
 					break;
 				}
