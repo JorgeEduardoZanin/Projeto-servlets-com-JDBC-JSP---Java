@@ -19,7 +19,7 @@
                           </div>
                       </div>
                       <a href="index.html">
-                          <img width="70px" style="margin-left:20px; border-radius:10px;   background: none !important;" class="img-fluid logo-empresa" src="<%= request.getContextPath() %>/assets/logoempresa.png" alt="Theme-Logo" />
+                          <img width="70px" style="margin-left:20px; border-radius:10px; " class="img-fluid logo-empresa" src="<%= request.getContextPath() %>/assets/logoempresa.png" alt="Theme-Logo" />
                       </a>
                       <a class="mobile-options waves-effect waves-light">
                           <i class="ti-more"></i>
@@ -91,7 +91,7 @@
                           </li>
                           <li class="user-profile header-notification">
                               <a href="#!" class="waves-effect waves-light">
-                                  <img src="<%= request.getContextPath() %>/assets/images/avatar-4.jpg" class="img-radius" alt="User-Profile-Image">
+                               
                                   <span><%= session.getAttribute("usuario")%></span>
                                   <i class="ti-angle-down"></i>
                               </a>

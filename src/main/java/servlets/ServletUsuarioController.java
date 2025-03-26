@@ -60,6 +60,7 @@ public class ServletUsuarioController extends ServletGenericUtil {
 					// usando a biblioteca para json jackson
 					ObjectMapper mapper = new ObjectMapper();
 					String json = mapper.writeValueAsString(dadosJsonUser);
+					response.addHeader("totalPaginas", ""+daoUser.getUserListTotalPaginas(nomeBusca, super.getUserLogado(request)));
 					response.getWriter().write(json);
 					break;
 
@@ -101,11 +102,26 @@ public class ServletUsuarioController extends ServletGenericUtil {
 				case "paginacao":
 					Integer offset = Integer.parseInt(request.getParameter("pagina"));
 					
-					List<ModelLogin> modelLoginList = daoUser.listaUsersPaginacao(this.getUserLogado(request), offset);
+					List<ModelLogin> modelLoginList = daoUser.listaUsersPaginacao(super.getUserLogado(request), offset);
 					request.setAttribute("totalPaginas", daoUser.totalPaginas(super.getUserLogado(request)));
 					request.setAttribute("modelLogins", modelLoginList);
 					request.getRequestDispatcher("principal/cadastro-usuario.jsp").forward(request, response);
-					break;	 
+					break;	
+					
+				case "buscaruserajaxmodal":
+					
+					String buscarNome = request.getParameter("nomeBusca");
+					String pagina = request.getParameter("pagina");
+					
+					
+					List<ModelLogin> dadosJsonUserPagina = daoUser.getUserListOffset(buscarNome, this.getUserLogado(request), Integer.parseInt(pagina));
+
+					// usando a biblioteca para json jackson
+					ObjectMapper mapperPagina = new ObjectMapper();
+					String jsonPagina = mapperPagina.writeValueAsString(dadosJsonUserPagina);
+					response.addHeader("totalPaginas", ""+daoUser.getUserListTotalPaginas(buscarNome, super.getUserLogado(request)));
+					response.getWriter().write(jsonPagina);
+					break;
 				default:
 					break;
 				}

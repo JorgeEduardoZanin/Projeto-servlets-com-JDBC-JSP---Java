@@ -253,12 +253,12 @@ if (modelLogin != null && modelLogin.getSexo().equals("Feminino")) {
 										<nav aria-label="Page navigation example">
 											<ul class="pagination">
 
-												<%			
+												<%
 												int totalPaginas = (int) request.getAttribute("totalPaginas");
-												
-												for(int i = 0; i < totalPaginas; i++){
-													String url = request.getContextPath()+"/ServletUsuarioController?acao=paginacao&pagina="+(i * 5);
-													out.print("<li class=\"page-item\"><a class=\"page-link\" href=\""+url+"\">"+(i+1)+"</a></li>");
+
+												for (int i = 0; i < totalPaginas; i++) {
+													String url = request.getContextPath() + "/ServletUsuarioController?acao=paginacao&pagina=" + (i * 5);
+													out.print("<li class=\"page-item\"><a class=\"page-link\" href=\"" + url + "\">" + (i + 1) + "</a></li>");
 												}
 												%>
 
@@ -339,6 +339,12 @@ if (modelLogin != null && modelLogin.getSexo().equals("Feminino")) {
 							</tbody>
 						</table>
 					</div>
+
+					<nav aria-label="Page navigation example">
+						<ul class="pagination" id="paginacaoUserAjaxModal">
+						</ul>
+					</nav>
+
 					<span id="totalResultados"></span>
 				</div>
 				<div class="modal-footer">
@@ -494,21 +500,63 @@ if (modelLogin != null && modelLogin.getSexo().equals("Feminino")) {
 			     	method: "get",
 			        url: urlAction,
 			        data: "nomeBusca=" + nomeBusca + "&acao=buscarUserAjax",
-			        success: function(response) {
+			        success: function(response, textStatus, xhr) {
 			   			var json = JSON.parse(response);
 			   			
 			   			$('#resultUserList > tbody > tr').remove();
-			   			
+			   			$('#paginacaoUserAjaxModal > li').remove();
 			   			for(var i=0; i < json.length; i++){
 			   				 $('#resultUserList > tbody').append('<tr> <td>'+ json[i].id+'</td> <td>'+json[i].name+'</td> <td>'+json[i].email+'</td> <td><button onclick="verNaTela('+json[i].id+')"type="button" class="btn btn-outline-info">Ver</button></td> </tr>'); 
 			   			}
 			   			
 			   			document.getElementById('totalResultados').textContent = 'Resultados:' +json.length;
+			   			
+			   			var totalPagina = xhr.getResponseHeader("totalPaginas");
+			   			
+			   			for(var i = 0 ; i < totalPagina ; i++){
+			   				var url = "nomeBusca="+nomeBusca +"&acao=buscarUserAjaxModal&pagina="+(i*5);
+			   				$('#paginacaoUserAjaxModal').append('<li class="page-item"><a class="page-link" href="#" onclick="buscaUserPaginaAjax(\''+url+'\')">'+(i+1)+'</a></li>');
+			   				
+			   			}
+			   			
 			        	}
 			        }).fail(function(xhr, status, errorThrown) {
 			            alert("Erro ao buscar usuario: " + xhr.responseText);
 			        });
 			}
+		}
+		
+		function buscaUserPaginaAjax(url){
+			var urlAction = document.getElementById("formUser").action;
+			var nomeBusca = document.getElementById("nomeBusca").value;
+			$.ajax({
+		     	method: "get",
+		     	url: urlAction,
+		        data: url,
+		        success: function(response, textStatus, xhr) {
+		   			var json = JSON.parse(response);
+		   			
+		   			$('#resultUserList > tbody > tr').remove();
+		   			$('#paginacaoUserAjaxModal > li').remove();
+		   			for(var i=0; i < json.length; i++){
+		   				 $('#resultUserList > tbody').append('<tr> <td>'+ json[i].id+'</td> <td>'+json[i].name+'</td> <td>'+json[i].email+'</td> <td><button onclick="verNaTela('+json[i].id+')"type="button" class="btn btn-outline-info">Ver</button></td> </tr>'); 
+		   			}
+		   			
+		   			document.getElementById('totalResultados').textContent = 'Resultados:' +json.length;
+		   			
+		   			var totalPagina = xhr.getResponseHeader("totalPaginas");
+		   			
+		   			for(var i = 0 ; i < totalPagina ; i++){
+		   			 	
+		   				var url = "nomeBusca="+nomeBusca +"&acao=buscarUserAjaxModal&pagina="+(i*5);
+		   				$('#paginacaoUserAjaxModal').append('<li class="page-item"><a class="page-link" href="#" onclick="buscaUserPaginaAjax(\''+url+'\')">'+(i+1)+'</a></li>');
+		   				
+		   			}
+		   			
+		        	}
+		        }).fail(function(xhr, status, errorThrown) {
+		            alert("Erro ao buscar usuario: " + xhr.responseText);
+		        });
 		}
 		
 		function verNaTela(id){

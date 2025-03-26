@@ -224,7 +224,7 @@ public class daoUserRepository {
 		PreparedStatement sttm = connection.prepareStatement(sql);
 		sttm.setLong(1, userLogado);
 		ResultSet resultSet = sttm.executeQuery();
-
+		
 		return this.resultSetList(resultSet);
 	}
 	
@@ -239,13 +239,36 @@ public class daoUserRepository {
 
 		return this.resultSet(resultSet);
 	}
+	
+	public int getUserListTotalPaginas(String nameUser, long userLogado) throws Exception {
 
-	public List<ModelLogin> getUserList(String nameUser, long userLogado) throws Exception {
-
-		String sql = "SELECT * FROM model_login WHERE upper(name) like upper(?) AND useradmin = false AND user_id =(?) LIMIT 5";
+		String sql = "SELECT count(1) as total FROM model_login WHERE upper(name) like upper(?) AND useradmin = false AND user_id =(?) ";
 		PreparedStatement sttm = connection.prepareStatement(sql);
 		sttm.setString(1, "%" + nameUser + "%");
 		sttm.setLong(2, userLogado);
+		ResultSet resultSet = sttm.executeQuery();
+
+		return userService.totalPaginasPaginacao(resultSet);
+	}  
+
+	public List<ModelLogin> getUserList(String nameUser, long userLogado) throws Exception {
+
+		String sql = "SELECT * FROM model_login WHERE upper(name) like upper(?) AND useradmin = false AND user_id =(?)  LIMIT 5";
+		PreparedStatement sttm = connection.prepareStatement(sql);
+		sttm.setString(1, "%" + nameUser + "%");
+		sttm.setLong(2, userLogado);
+		ResultSet resultSet = sttm.executeQuery();
+
+		return this.resultSetList(resultSet);
+	}
+	
+	public List<ModelLogin> getUserListOffset(String nameUser, long userLogado, int offset) throws Exception {
+
+		String sql = "SELECT * FROM model_login WHERE upper(name) like upper(?) AND useradmin = false AND user_id =(?) OFFSET ? LIMIT 5";
+		PreparedStatement sttm = connection.prepareStatement(sql);
+		sttm.setString(1, "%" + nameUser + "%");
+		sttm.setLong(2, userLogado);
+		sttm.setInt(3, offset);
 		ResultSet resultSet = sttm.executeQuery();
 
 		return this.resultSetList(resultSet);
