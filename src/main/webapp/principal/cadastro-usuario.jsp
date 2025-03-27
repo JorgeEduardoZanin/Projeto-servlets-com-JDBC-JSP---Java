@@ -217,6 +217,7 @@ if (modelLogin != null && modelLogin.getSexo().equals("Feminino")) {
 															</button>
 															<button type="button" class="btn btn-outline-success"
 																data-toggle="modal" data-target="#modalUser">Buscar</button>
+																<button type="button" class="btn btn-outline-warning" data-toggle="modal" data-target="#modalTelefone">Telefones</button>
 														</form>
 													</div>
 												</div>
@@ -354,6 +355,44 @@ if (modelLogin != null && modelLogin.getSexo().equals("Feminino")) {
 			</div>
 		</div>
 	</div>
+	
+	
+	<div class="modal fade" id="modalTelefone" tabindex="-1" role="dialog" 
+		aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel">Telefones</h5>
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<div style="height: 300px; overflow: scroll;">
+						<table class="table" id="resultTelList">
+							<thead>
+								<tr>
+									<th scope="col">ID</th>
+									<th scope="col">Telefone</th>
+									<th scope="col">Ver</th>
+								</tr>
+							</thead>
+							<tbody>
+
+							</tbody>
+						</table>
+					</div>
+
+					<span id="totalTelefone"></span>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary"
+						data-dismiss="modal">Fechar</button>
+				</div>
+			</div>
+		</div>
+	</div>
 	<style>
 .modals {
 	display: none;
@@ -413,7 +452,6 @@ if (modelLogin != null && modelLogin.getSexo().equals("Feminino")) {
 	
 		function visualizarImagem(fotoembase64, filefoto){
 			
-			alert("teste");
 			var preview = document.getElementById(fotoembase64);
 			var fileUser = document.getElementById(filefoto).files[0];
 			var reader = new FileReader();
@@ -523,6 +561,41 @@ if (modelLogin != null && modelLogin.getSexo().equals("Feminino")) {
 			        }).fail(function(xhr, status, errorThrown) {
 			            alert("Erro ao buscar usuario: " + xhr.responseText);
 			        });
+			}
+		}
+		
+		$(document).ready(function() {
+		    $('#modalTelefone').on('shown.bs.modal', function () {
+		    	buscarTelefone(); 
+		    });
+		});
+		
+		function buscarTelefone(){
+			var idUser = document.getElementById("id").value;
+			alert(idUser);
+			if(idUser != null && idUser != '' && idUser.trim()!=''){
+			var urlAction = document.getElementById("formUser").action;
+			$.ajax({
+				method:"get",
+				url:urlAction,
+				data: "idUser=" + idUser + "&acao=listarTelefone",
+				success: function(response) {
+					var json = JSON.parse(response);
+							
+					$('#resultTelList > tbody > tr').remove();
+		   			$('#paginacaoUserAjaxModal > li').remove();			
+		   			for(var i=0; i < json.length; i++){
+		   			 $('#resultTelList > tbody').append('<tr> <td>'+ json[i].id+'</td> <td>'+ json[i].numero+'</td>  </tr>'); 
+		   			}
+		   			
+		   			document.getElementById('totalResultados').textContent = 'Resultados:' +json.length;
+		   			
+				}
+			
+			}).fail(function(xhr, status, errorThrown){
+				 alert("Erro" + xhr.responseText);
+				
+			});
 			}
 		}
 		

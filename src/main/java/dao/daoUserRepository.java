@@ -9,6 +9,7 @@ import java.util.List;
 
 import connection.SingleConnection;
 import entities.ModelLogin;
+import entities.ModelTelefone;
 import net.bytebuddy.dynamic.scaffold.MethodRegistry.Prepared;
 import services.UserService;
 
@@ -20,11 +21,11 @@ public class daoUserRepository {
 	public daoUserRepository() {
 		connection = SingleConnection.getConnection();
 	}
-	
+
 	public List<ModelLogin> resultSetList(ResultSet resultSet) throws SQLException {
 		ModelLogin modelLogin = new ModelLogin();
 		List<ModelLogin> lista = new ArrayList<ModelLogin>();
-		
+
 		while (resultSet.next()) {
 			String name = resultSet.getString("name");
 			String loginUser = resultSet.getString("login");
@@ -39,18 +40,19 @@ public class daoUserRepository {
 			String logradouro = resultSet.getString("logradouro");
 			String localidade = resultSet.getString("localidade");
 			String cep = resultSet.getString("cep");
-			
-			modelLogin = new ModelLogin(id, name, email, loginUser, senha, cargo, sexo, UF, bairro, numero, logradouro, localidade, cep);
+
+			modelLogin = new ModelLogin(id, name, email, loginUser, senha, cargo, sexo, UF, bairro, numero, logradouro,
+					localidade, cep);
 			lista.add(modelLogin);
-			
+
 		}
-		
+
 		return lista;
 	}
 
 	public ModelLogin resultSet(ResultSet resultSet) throws SQLException {
 		ModelLogin modelLogin = new ModelLogin();
-		
+
 		while (resultSet.next()) {
 			String name = resultSet.getString("name");
 			String loginUser = resultSet.getString("login");
@@ -67,15 +69,16 @@ public class daoUserRepository {
 			String localidade = resultSet.getString("localidade");
 			String cep = resultSet.getString("cep");
 			String extensaofotouser = resultSet.getString("extensaofotouser");
-			
-			modelLogin = new ModelLogin(id, name, email, loginUser, senha, cargo, sexo, UF, bairro, numero, logradouro, localidade, cep);
+
+			modelLogin = new ModelLogin(id, name, email, loginUser, senha, cargo, sexo, UF, bairro, numero, logradouro,
+					localidade, cep);
 			modelLogin.setFotoUser(fotoUser);
 			modelLogin.setExtensaoFotoUser(extensaofotouser);
 		}
-		
+
 		return modelLogin;
 	}
-	
+
 	public void updateFoto(ModelLogin modelLogin) throws SQLException {
 
 		if (modelLogin.getFotoUser() != null && !modelLogin.getFotoUser().isEmpty()) {
@@ -178,7 +181,7 @@ public class daoUserRepository {
 	}
 
 	public ModelLogin getUserLogado(String login) throws Exception {
-		
+
 		String sql = "SELECT * FROM model_login WHERE login = (?);";
 		PreparedStatement sttm = connection.prepareStatement(sql);
 		sttm.setString(1, login);
@@ -197,18 +200,18 @@ public class daoUserRepository {
 
 		return this.resultSet(resultSet);
 	}
-	
-	public int totalPaginas(long userLogado) throws Exception{
-		
+
+	public int totalPaginas(long userLogado) throws Exception {
+
 		String sql = "SELECT count(1) as total FROM model_login WHERE user_id =(?);";
 		PreparedStatement sttm = connection.prepareStatement(sql);
 		sttm.setLong(1, userLogado);
 		ResultSet resultSet = sttm.executeQuery();
-		
+
 		return userService.totalPaginasPaginacao(resultSet);
-		
+
 	}
-	
+
 	public List<ModelLogin> listaUsersPaginacao(Long userLogado, Integer offset) throws Exception {
 		String sql = "SELECT * FROM model_login WHERE useradmin = false AND user_id = (?) ORDER BY name LIMIT 5 OFFSET ?;";
 		PreparedStatement sttm = connection.prepareStatement(sql);
@@ -224,11 +227,23 @@ public class daoUserRepository {
 		PreparedStatement sttm = connection.prepareStatement(sql);
 		sttm.setLong(1, userLogado);
 		ResultSet resultSet = sttm.executeQuery();
-		
+
 		return this.resultSetList(resultSet);
 	}
-	
 
+	
+	public ModelLogin buscaPorId(Long id) throws Exception {
+
+		String sql = "SELECT * FROM model_login WHERE id = (?) AND useradmin = false;";
+		PreparedStatement sttm = connection.prepareStatement(sql);
+		sttm.setLong(1, id);
+	
+		ResultSet resultSet = sttm.executeQuery();
+
+		return this.resultSet(resultSet);
+	}
+
+	
 	public ModelLogin getUserId(String id, long userLogado) throws Exception {
 
 		String sql = "SELECT * FROM model_login WHERE id = (?) AND useradmin = false AND user_id =(?);";
@@ -239,7 +254,7 @@ public class daoUserRepository {
 
 		return this.resultSet(resultSet);
 	}
-	
+
 	public int getUserListTotalPaginas(String nameUser, long userLogado) throws Exception {
 
 		String sql = "SELECT count(1) as total FROM model_login WHERE upper(name) like upper(?) AND useradmin = false AND user_id =(?) ";
@@ -249,7 +264,7 @@ public class daoUserRepository {
 		ResultSet resultSet = sttm.executeQuery();
 
 		return userService.totalPaginasPaginacao(resultSet);
-	}  
+	}
 
 	public List<ModelLogin> getUserList(String nameUser, long userLogado) throws Exception {
 
@@ -261,7 +276,7 @@ public class daoUserRepository {
 
 		return this.resultSetList(resultSet);
 	}
-	
+
 	public List<ModelLogin> getUserListOffset(String nameUser, long userLogado, int offset) throws Exception {
 
 		String sql = "SELECT * FROM model_login WHERE upper(name) like upper(?) AND useradmin = false AND user_id =(?) OFFSET ? LIMIT 5";
