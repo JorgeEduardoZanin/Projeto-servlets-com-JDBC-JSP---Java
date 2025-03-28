@@ -5,7 +5,7 @@
     <welcome-file>index.jsp</welcome-file>
   </welcome-file-list>
   <session-config>
-    <session-timeout>30</session-timeout> <!-- tempo em minutos -->
+    <session-timeout>30</session-timeout>
   </session-config>
   <servlet>
     <description></description>
@@ -46,5 +46,15 @@
   <servlet-mapping>
     <servlet-name>ServletUserController</servlet-name>
     <url-pattern>/ServletUserController</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>ServletTelefoneController</display-name>
+    <servlet-name>ServletTelefoneController</servlet-name>
+    <servlet-class>servlets.ServletTelefoneController</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ServletTelefoneController</servlet-name>
+    <url-pattern>/ServletTelefoneController</url-pattern>
   </servlet-mapping>
 </web-app>

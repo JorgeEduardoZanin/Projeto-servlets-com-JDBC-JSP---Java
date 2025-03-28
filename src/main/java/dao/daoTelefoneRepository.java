@@ -75,5 +75,16 @@ public class daoTelefoneRepository {
 	
 	}
 	
+	public void deleteTel(long id) throws SQLException {
+
+		String sql = "DELETE FROM telefone WHERE id =(?)";
+		PreparedStatement sttm = connection.prepareStatement(sql);
+		sttm.setLong(1, id);
+		sttm.executeUpdate();
+
+		connection.commit();
+
+	}
+	
 
 }

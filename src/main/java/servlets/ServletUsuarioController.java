@@ -124,22 +124,9 @@ public class ServletUsuarioController extends ServletGenericUtil {
 					response.addHeader("totalPaginas","" + daoUser.getUserListTotalPaginas(buscarNome, super.getUserLogado(request)));
 					response.getWriter().write(jsonPagina);
 					break;
-
-				case "listartelefone":
-
-					String idUserTel = request.getParameter("idUser");
-					
-					List<ModelTelefone> listaTelefoneJson = daoTelefone.getTelefone(idUserTel);
 				
-					// usando a biblioteca para json jackson
-					ObjectMapper mapperTel = new ObjectMapper();
-					String jsonTel = mapperTel.writeValueAsString(listaTelefoneJson);
-					response.getWriter().write(jsonTel);
-					break;
 				default:
-					
 					break;
-				
 				}
 			}
 
@@ -158,23 +145,7 @@ public class ServletUsuarioController extends ServletGenericUtil {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		try {
-			String acao = request.getParameter("acao");
-			HttpServletRequest req = (HttpServletRequest) request;
-			HttpSession session = req.getSession();
-			String usuarioLogado = (String) session.getAttribute("usuario");
-			
-			if(acao != null && !acao.isEmpty() && acao.equals("adicionarNovoTelefone")){
-				String idPai = request.getParameter("idPai");
-				String numeroTel = request.getParameter("novoTelefone");
-				
-				ModelLogin modelLogin = daoUser.buscaPorId(Long.parseLong(idPai));
-				
-				ModelTelefone modelTelefone = new ModelTelefone(numeroTel,  modelLogin, daoUser.getUserLogado(usuarioLogado));
-				
-				daoTelefone.createTelefone(modelTelefone);
-				return;
-			}
+		try {		
 			
 			String msg = "Usuario criado com sucesso!";
 			String idBruto = request.getParameter("id");
@@ -191,14 +162,12 @@ public class ServletUsuarioController extends ServletGenericUtil {
 			String UF = request.getParameter("UF");
 			String cep = request.getParameter("cep");
 
-			
-
 			Long id = idBruto != null && !idBruto.isEmpty() ? Long.parseLong(idBruto) : null;
 
-			ModelLogin modelLogin = new ModelLogin(id, name, email, login, senha, cargo, sexo, logradouro,
-					bairro, localidade, UF, cep, numero);
+			ModelLogin modelLogin = new ModelLogin(id, name, email, login, senha, cargo, sexo, cep,
+					bairro,  logradouro,localidade, UF,  numero);
 
-			ModelTelefone modelTelefone = new ModelTelefone(numero, modelLogin, daoUser.getUserLogado(usuarioLogado));
+			 
 
 			if (JakartaServletFileUpload.isMultipartContent(request)) {
 				Part part = request.getPart("filefoto");
@@ -233,14 +202,14 @@ public class ServletUsuarioController extends ServletGenericUtil {
 				msg = "Usuario atualizado com sucesso!";
 			}
 			modelLogin = daoUser.createUser(modelLogin, super.getUserLogado(request));
-			daoTelefone.createTelefone(modelTelefone);
+			
 			// para listar todos os users quando criado um novo user
 			List<ModelLogin> usersListVer = daoUser.listaUsers(super.getUserLogado(request));
 			request.setAttribute("modelLogins", usersListVer);
 
 			request.setAttribute("msg", msg);
 			request.setAttribute("modelLogin", modelLogin);
-			request.setAttribute("modelTelefone", modelTelefone);
+			
 			request.getRequestDispatcher("principal/cadastro-usuario.jsp").forward(request, response);
 
 		} catch (SQLException e) {

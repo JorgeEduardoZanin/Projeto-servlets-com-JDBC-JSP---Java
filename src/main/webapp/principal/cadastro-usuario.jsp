@@ -386,7 +386,7 @@ if (modelLogin != null && modelLogin.getSexo().equals("Feminino")) {
 								<tr>
 									<th scope="col">ID</th>
 									<th scope="col">Telefone</th>
-									<th scope="col">Ver</th>
+									<th scope="col">Deletar</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -543,6 +543,22 @@ if (modelLogin != null && modelLogin.getSexo().equals("Feminino")) {
 		    }
 		}
 		
+		function deletarTel(id) {
+		    if(confirm('Deseja realmente excluir o numero de telefone?')){
+		        $.ajax({
+		            method: "get",
+		            url: "<%=request.getContextPath()%>/ServletTelefoneController",
+		            data: "idTelefone=" + id + "&acao=deletarTel",
+		            success: function(response) {  
+		            	alert("Telefone deletado com sucesso!");
+		                buscarTelefone();
+		            }
+		        }).fail(function(xhr, status, errorThrown) {
+		            alert("Erro ao deletar telefone por ID: " + xhr.responseText);
+		        });
+		    }
+		}
+		
 		function adicionarNovoTelefone(){
 			var idUser = document.getElementById("id").value;
 			var novoTelefone = document.getElementById("novoTelefone").value;
@@ -560,8 +576,8 @@ if (modelLogin != null && modelLogin.getSexo().equals("Feminino")) {
 				 var urlAction = document.getElementById("formUser").action;
 				 $.ajax({
 			     	method: "post",
-			        url: urlAction,
-			        data: "novoTelefone=" + novoTelefone + "&idPai="+idUser +"&acao=adicionarNovoTelefone",
+			        url: "<%=request.getContextPath()%>/ServletTelefoneController",
+			        data: "novoTelefone=" + novoTelefone + "&idPai="+idUser,
 			        success: function(response){
 			        	alert("Telefone adicionado com sucesso");
 			        	buscarTelefone();
@@ -626,18 +642,18 @@ if (modelLogin != null && modelLogin.getSexo().equals("Feminino")) {
 			var urlAction = document.getElementById("formUser").action;
 			$.ajax({
 				method:"get",
-				url:urlAction,
+				url:"<%=request.getContextPath()%>/ServletTelefoneController",
 				data: "idUser=" + idUser + "&acao=listarTelefone",
 				success: function(response) {
-					var json = JSON.parse(response);
+					var jsonTel = JSON.parse(response);
 							
 					$('#resultTelList > tbody > tr').remove();
 		   			$('#paginacaoUserAjaxModal > li').remove();			
-		   			for(var i=0; i < json.length; i++){
-		   			 $('#resultTelList > tbody').append('<tr> <td>'+ json[i].id+'</td> <td>'+ json[i].numero+'</td>  </tr>'); 
+		   			for(var i=0; i < jsonTel.length; i++){
+		   			 $('#resultTelList > tbody').append('<tr> <td>'+ jsonTel[i].id+'</td> <td>'+ jsonTel[i].numero+'</td> <td><button onclick="deletarTel('+jsonTel[i].id+')" type="button" class="btn btn-outline-info">Excluir</button></td> </tr>'); 
 		   			}
 		   			
-		   			document.getElementById('totalResultados').textContent = 'Resultados:' +json.length;
+		   			document.getElementById('totalResultados').textContent = 'Resultados:' +jsonTel;
 		   			
 				}
 			

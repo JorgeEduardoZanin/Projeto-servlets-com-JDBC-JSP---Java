@@ -109,13 +109,13 @@ public class daoUserRepository {
 			String cep = modelLogin.getCep();
 			String logradouro = modelLogin.getLogradouro();
 			String numero = modelLogin.getNumero();
-			String bairro = modelLogin.getSexo();
+			String bairro = modelLogin.getBairro();
 			String localidade = modelLogin.getLocalidade();
 
 			if (modelLogin.newId()) {
 				String sql = "INSERT INTO model_login(login, senha, name, email, user_id, cargo, sexo, UF, cep, logradouro, numero, bairro, localidade) VALUES (?, ?, ?, ?, ?, ?, ?, ? ,? ,?, ? , ?, ?);";
 				sttm = connection.prepareStatement(sql);
-
+String stes;
 				sttm.setString(1, login);
 				sttm.setString(2, senha);
 				sttm.setString(3, name);
