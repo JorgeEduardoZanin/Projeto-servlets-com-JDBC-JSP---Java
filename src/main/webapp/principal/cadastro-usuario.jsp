@@ -217,7 +217,8 @@ if (modelLogin != null && modelLogin.getSexo().equals("Feminino")) {
 															</button>
 															<button type="button" class="btn btn-outline-success"
 																data-toggle="modal" data-target="#modalUser">Buscar</button>
-																<button type="button" class="btn btn-outline-warning" data-toggle="modal" data-target="#modalTelefone">Telefones</button>
+															<button type="button" class="btn btn-outline-warning"
+																data-toggle="modal" data-target="#modalTelefone">Telefones</button>
 														</form>
 													</div>
 												</div>
@@ -355,9 +356,9 @@ if (modelLogin != null && modelLogin.getSexo().equals("Feminino")) {
 			</div>
 		</div>
 	</div>
-	
-	
-	<div class="modal fade" id="modalTelefone" tabindex="-1" role="dialog" 
+
+
+	<div class="modal fade" id="modalTelefone" tabindex="-1" role="dialog"
 		aria-labelledby="exampleModalLabel" aria-hidden="true">
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
@@ -369,6 +370,16 @@ if (modelLogin != null && modelLogin.getSexo().equals("Feminino")) {
 					</button>
 				</div>
 				<div class="modal-body">
+					<div class="input-group mb-3">
+							<input type="text" class="form-control" placeholder="Telefone"
+								aria-label="Telefone" aria-describedby="basic-addon2"
+								id="novoTelefone">
+							<div class="input-group-append">
+								<button class="btn btn-outline-success" type="button"
+									onclick="adicionarNovoTelefone()">Adicionar</button>
+							</div>
+					</div>
+
 					<div style="height: 300px; overflow: scroll;">
 						<table class="table" id="resultTelList">
 							<thead>
@@ -393,6 +404,10 @@ if (modelLogin != null && modelLogin.getSexo().equals("Feminino")) {
 			</div>
 		</div>
 	</div>
+
+
+
+
 	<style>
 .modals {
 	display: none;
@@ -528,6 +543,35 @@ if (modelLogin != null && modelLogin.getSexo().equals("Feminino")) {
 		    }
 		}
 		
+		function adicionarNovoTelefone(){
+			var idUser = document.getElementById("id").value;
+			var novoTelefone = document.getElementById("novoTelefone").value;
+			if(novoTelefone == null || novoTelefone == '' || novoTelefone.trim()=='' && idUser != null && idUser != '' && idUser.trim()!=''){
+				alert("Digite um numero de telefone!");
+				return;
+			}
+			
+			if (!idUser || idUser.trim() === '') {
+		        alert("Busque pelo usuario que voce deseja adicionar um novo telefone!");
+		        return; 
+		    }
+			
+			if(novoTelefone != null && novoTelefone != '' && novoTelefone.trim()!=''){
+				 var urlAction = document.getElementById("formUser").action;
+				 $.ajax({
+			     	method: "post",
+			        url: urlAction,
+			        data: "novoTelefone=" + novoTelefone + "&idPai="+idUser +"&acao=adicionarNovoTelefone",
+			        success: function(response){
+			        	alert("Telefone adicionado com sucesso");
+			        	buscarTelefone();
+			        }
+			}).fail(function(xhr, status, errorThrown) {
+	            alert("Erro ao adicionar telefone: " + xhr.responseText);
+			 });
+			}
+		}
+		
 		function buscarUser(){
 			var nomeBusca = document.getElementById("nomeBusca").value;
 			
@@ -572,7 +616,12 @@ if (modelLogin != null && modelLogin.getSexo().equals("Feminino")) {
 		
 		function buscarTelefone(){
 			var idUser = document.getElementById("id").value;
-			alert(idUser);
+			
+			if (!idUser || idUser.trim() === '') {
+		        alert("Busque por um usuário para ver os telefones disponíveis!");
+		        return; 
+		    }
+			
 			if(idUser != null && idUser != '' && idUser.trim()!=''){
 			var urlAction = document.getElementById("formUser").action;
 			$.ajax({

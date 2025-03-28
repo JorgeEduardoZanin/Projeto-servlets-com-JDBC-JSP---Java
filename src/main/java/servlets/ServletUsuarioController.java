@@ -128,16 +128,16 @@ public class ServletUsuarioController extends ServletGenericUtil {
 				case "listartelefone":
 
 					String idUserTel = request.getParameter("idUser");
-					Long idUserPai = idUserTel != null && !idUserTel.isEmpty() ? Long.parseLong(idUserTel) : null;
+					
 					List<ModelTelefone> listaTelefoneJson = daoTelefone.getTelefone(idUserTel);
-					String teta;
+				
 					// usando a biblioteca para json jackson
 					ObjectMapper mapperTel = new ObjectMapper();
 					String jsonTel = mapperTel.writeValueAsString(listaTelefoneJson);
 					response.getWriter().write(jsonTel);
 					break;
 				default:
-					String ta;
+					
 					break;
 				
 				}
@@ -159,6 +159,23 @@ public class ServletUsuarioController extends ServletGenericUtil {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		try {
+			String acao = request.getParameter("acao");
+			HttpServletRequest req = (HttpServletRequest) request;
+			HttpSession session = req.getSession();
+			String usuarioLogado = (String) session.getAttribute("usuario");
+			
+			if(acao != null && !acao.isEmpty() && acao.equals("adicionarNovoTelefone")){
+				String idPai = request.getParameter("idPai");
+				String numeroTel = request.getParameter("novoTelefone");
+				
+				ModelLogin modelLogin = daoUser.buscaPorId(Long.parseLong(idPai));
+				
+				ModelTelefone modelTelefone = new ModelTelefone(numeroTel,  modelLogin, daoUser.getUserLogado(usuarioLogado));
+				
+				daoTelefone.createTelefone(modelTelefone);
+				return;
+			}
+			
 			String msg = "Usuario criado com sucesso!";
 			String idBruto = request.getParameter("id");
 			String name = request.getParameter("name");
@@ -174,14 +191,12 @@ public class ServletUsuarioController extends ServletGenericUtil {
 			String UF = request.getParameter("UF");
 			String cep = request.getParameter("cep");
 
-			HttpServletRequest req = (HttpServletRequest) request;
-			HttpSession session = req.getSession();
-			String usuarioLogado = (String) session.getAttribute("usuario");
+			
 
 			Long id = idBruto != null && !idBruto.isEmpty() ? Long.parseLong(idBruto) : null;
 
-			ModelLogin modelLogin = new ModelLogin(id, name, email, login, senha, cargo, sexo, numero, logradouro,
-					bairro, localidade, UF, cep);
+			ModelLogin modelLogin = new ModelLogin(id, name, email, login, senha, cargo, sexo, logradouro,
+					bairro, localidade, UF, cep, numero);
 
 			ModelTelefone modelTelefone = new ModelTelefone(numero, modelLogin, daoUser.getUserLogado(usuarioLogado));
 

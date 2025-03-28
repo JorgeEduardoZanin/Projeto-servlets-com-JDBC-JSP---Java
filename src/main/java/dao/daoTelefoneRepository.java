@@ -51,8 +51,8 @@ public class daoTelefoneRepository {
 		Long idCad = modelTelefone.getUsuario_cad_id().getId();
 
 		PreparedStatement sttm = null;
-		if (modelTelefone.newId()) {
-			String sql = "INSERT INTO telefone (numero, usuario_pai_id, usuario_cad_fk) VALUES ( ?, ?, ?);";
+	 
+			String sql = "INSERT INTO telefone (numero, usuario_pai_id, usuario_cad_id) VALUES ( ?, ?, ?);";
 			sttm = connection.prepareStatement(sql);
 
 			sttm.setString(1, numero);
@@ -61,24 +61,12 @@ public class daoTelefoneRepository {
 
 			sttm.execute();
 			connection.commit();
-		}
-
-		String sql = "UPDATE telefone (numero, usuario_pai_id, usuario_cad_fk) VALUES ( ?, ?, ?)";
-		sttm = connection.prepareStatement(sql);
-
-		sttm.setString(1, numero);
-		sttm.setLong(2, idPai);
-		sttm.setLong(3, idCad);
-
-		sttm.executeUpdate();
-		connection.commit();
-
 
 	}
 	
 	
 	public List<ModelTelefone> getTelefone(String userPaiId) throws Exception {
-		String sql = "SELECT * FROM telefone WHERE usuario_pai_id = (?) ";
+		String sql = "SELECT * FROM telefone WHERE usuario_pai_id = (?) ORDER BY id ASC;";
 		PreparedStatement sttm = connection.prepareStatement(sql);
 		sttm.setLong(1, Long.parseLong(userPaiId));
 		ResultSet resultSet = sttm.executeQuery();
