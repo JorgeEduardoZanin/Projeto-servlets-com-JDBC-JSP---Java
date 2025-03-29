@@ -195,16 +195,16 @@ public class ServletUsuarioController extends ServletGenericUtil {
 				request.getRequestDispatcher("principal/cadastro-usuario.jsp").forward(request, response);
 				return;
 			}
+			List<ModelLogin> usersListVer = daoUser.listaUsers(super.getUserLogado(request));
 			if (!modelLogin.newId()) {
 				// para listar todos os users quando um user e atualizado
-				List<ModelLogin> usersListVer = daoUser.listaUsers(super.getUserLogado(request));
+				
 				request.setAttribute("modelLogins", usersListVer);
 				msg = "Usuario atualizado com sucesso!";
 			}
 			modelLogin = daoUser.createUser(modelLogin, super.getUserLogado(request));
-			
+			request.setAttribute("totalPaginas", daoUser.totalPaginas(super.getUserLogado(request)));
 			// para listar todos os users quando criado um novo user
-			List<ModelLogin> usersListVer = daoUser.listaUsers(super.getUserLogado(request));
 			request.setAttribute("modelLogins", usersListVer);
 
 			request.setAttribute("msg", msg);
@@ -217,11 +217,13 @@ public class ServletUsuarioController extends ServletGenericUtil {
 			request.setAttribute("msg", e.getMessage());
 			redirecionar.forward(request, response);
 			e.printStackTrace();
+			System.out.println(e.getMessage());
 		} catch (Exception e) {
 			RequestDispatcher redirecionar = request.getRequestDispatcher("erro.jsp");
 			request.setAttribute("msg", e.getMessage());
 			redirecionar.forward(request, response);
 			e.printStackTrace();
+			System.out.println(e.getMessage());
 		}
 
 	}

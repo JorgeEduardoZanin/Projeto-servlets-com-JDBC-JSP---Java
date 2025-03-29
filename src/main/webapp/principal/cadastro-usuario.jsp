@@ -217,7 +217,7 @@ if (modelLogin != null && modelLogin.getSexo().equals("Feminino")) {
 															</button>
 															<button type="button" class="btn btn-outline-success"
 																data-toggle="modal" data-target="#modalUser">Buscar</button>
-															<button type="button" class="btn btn-outline-warning"
+															<button type="button" class="btn btn-outline-warning" onclick="limpaTelefonesModal()"
 																data-toggle="modal" data-target="#modalTelefone">Telefones</button>
 														</form>
 													</div>
@@ -257,6 +257,7 @@ if (modelLogin != null && modelLogin.getSexo().equals("Feminino")) {
 
 												<%
 												int totalPaginas = (int) request.getAttribute("totalPaginas");
+												
 
 												for (int i = 0; i < totalPaginas; i++) {
 													String url = request.getContextPath() + "/ServletUsuarioController?acao=paginacao&pagina=" + (i * 5);
@@ -371,12 +372,12 @@ if (modelLogin != null && modelLogin.getSexo().equals("Feminino")) {
 				</div>
 				<div class="modal-body">
 					<div class="input-group mb-3">
-							<input type="text" class="form-control" placeholder="Telefone"
+							<input type="text" class="form-control" placeholder="(XX) XXXX-XXXX ou (XX) 9XXXX-XXXX" 
 								aria-label="Telefone" aria-describedby="basic-addon2"
 								id="novoTelefone">
 							<div class="input-group-append">
-								<button class="btn btn-outline-success" type="button"
-									onclick="adicionarNovoTelefone()">Adicionar</button>
+								<button class="btn btn-outline-success" type="button" id="addTel" onclick="adicionarNovoTelefone();"
+									>Adicionar</button>
 							</div>
 					</div>
 
@@ -446,8 +447,46 @@ if (modelLogin != null && modelLogin.getSexo().equals("Feminino")) {
 </style>
 
 	<jsp:include page="javascript.jsp"></jsp:include>
-
+	
+	
+	
+	
 	<script>
+	
+	var phoneInput = document.getElementById('novoTelefone');
+	var myForm = document.forms.myForm;
+
+    phoneInput.addEventListener('input', function (e) {
+        var digits = e.target.value.replace(/\D/g, '');
+        var formatted = '';
+
+        if (digits.length === 0) {
+          formatted = '';
+        } else if (digits.length < 3) {
+       
+          formatted = '(' + digits;
+        } else if (digits.length < 7) {
+          
+          formatted = '(' + digits.substring(0,2) + ') ' + digits.substring(2);
+        } else if (digits.length <= 10) {
+         
+          formatted = '(' + digits.substring(0,2) + ') ' 
+                    + digits.substring(2,6) + '-' + digits.substring(6);
+        } else {
+         
+          formatted = '(' + digits.substring(0,2) + ') ' 
+                    + digits.substring(2,3) + ' ' + digits.substring(3,7) 
+                    + '-' + digits.substring(7,11);
+        }
+        e.target.value = formatted;
+      });
+
+	
+		$('#numero').keypress(function(event){
+			return /\d/.test(String.fromCharCode(event.keyCode));
+		});
+		
+		
 	
 		function pesquisaCep(){
 			var cep = $('#cep').val();
@@ -484,6 +523,10 @@ if (modelLogin != null && modelLogin.getSexo().equals("Feminino")) {
 		}
 	
 	
+		function limpaTelefonesModal(){
+			$('#resultTelList > tbody > tr').remove();
+		}
+		
 		function togglePassword() {
 			var senhaInput = document.getElementById("senha");
 			var eyeIcon = document.getElementById("eye-icon");
@@ -515,6 +558,10 @@ if (modelLogin != null && modelLogin.getSexo().equals("Feminino")) {
 			for (var i = 0; i < elementos.length; i++){
 				elementos[i].value = '';
 			}
+		}
+		
+		function limparFormTel() {
+			  document.getElementById("novoTelefone").value = ''
 		}
 		
 		function deletar(){
@@ -581,6 +628,7 @@ if (modelLogin != null && modelLogin.getSexo().equals("Feminino")) {
 			        success: function(response){
 			        	alert("Telefone adicionado com sucesso");
 			        	buscarTelefone();
+			        	limparFormTel();
 			        }
 			}).fail(function(xhr, status, errorThrown) {
 	            alert("Erro ao adicionar telefone: " + xhr.responseText);
