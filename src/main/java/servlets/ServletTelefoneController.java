@@ -76,6 +76,8 @@ public class ServletTelefoneController extends ServletGenericUtil {
 			HttpSession session = req.getSession();
 			String usuarioLogado = (String) session.getAttribute("usuario");
 		
+			
+			
 			String idPai = request.getParameter("idPai");
 			String numeroTel = request.getParameter("novoTelefone");
 			
@@ -83,10 +85,20 @@ public class ServletTelefoneController extends ServletGenericUtil {
 			
 			ModelTelefone modelTelefone = new ModelTelefone(numeroTel,  modelLogin, daoUser.getUserLogado(usuarioLogado));
 			
+			boolean validaTel = daoTelefone.telefoneUnico(modelTelefone);
+			
+			if(validaTel) {
+				response.setContentType("text/plain");
+			    response.setCharacterEncoding("UTF-8");
+			    response.getWriter().write("Esse numero ja existe!");
+			    return;
+			}
+			
 			daoTelefone.createTelefone(modelTelefone);
 			
 		}catch (Exception e) {
 			e.getMessage();
+			System.out.println(e.getMessage());
 		}	
 		
 

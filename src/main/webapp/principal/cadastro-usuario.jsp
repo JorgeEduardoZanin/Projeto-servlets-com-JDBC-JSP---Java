@@ -416,7 +416,7 @@ if (modelLogin != null && modelLogin.getSexo().equals("Feminino")) {
 						</table>
 					</div>
 
-					<span id="totalTelefone"></span>
+					<span id="telUnico"></span>
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-secondary"
@@ -689,10 +689,14 @@ if (modelLogin != null && modelLogin.getSexo().equals("Feminino")) {
 			        url: "<%=request.getContextPath()%>/ServletTelefoneController",
 			        data: "novoTelefone=" + novoTelefone + "&idPai="+idUser,
 			        success: function(response){
-			        	alert("Telefone adicionado com sucesso");
-			        	buscarTelefone();
-			        	limparFormTel();
-			        }
+			        	 if(response && response.trim() !== "") {
+			        	      alert(response);
+			        	    } else {
+			        	      alert("Telefone adicionado com sucesso!");
+			        	      buscarTelefone();
+			        	      limparFormTel();
+			        	    }
+			        	  }
 			}).fail(function(xhr, status, errorThrown) {
 	            alert("Erro ao adicionar telefone: " + xhr.responseText);
 			 });
@@ -828,8 +832,9 @@ if (modelLogin != null && modelLogin.getSexo().equals("Feminino")) {
 		}
 		
 		<%String msgLoginUnico = (String) request.getAttribute("msgLoginUnico");
-String msg = (String) request.getAttribute("msg");
-String msgDelAjax = (String) request.getAttribute("msgDelAjax");
+		String telUnico = (String) request.getAttribute("telUnico");
+		String msg = (String) request.getAttribute("msg");
+		String msgDelAjax = (String) request.getAttribute("msgDelAjax");
 
 if (msgLoginUnico != null) {%>
 				exibirMensagem("erro", "<%=msgLoginUnico%>");

@@ -78,11 +78,11 @@ public class ServletUsuarioController extends ServletGenericUtil {
 					String idUser = request.getParameter("id");
 					ModelLogin modelLogin = daoUser.getUserId(idUser, super.getUserLogado(request));
 
-					DecimalFormat df = new DecimalFormat("#,##0.00", new DecimalFormatSymbols(Locale.of("pt", "BR")));
-					String d = df.format(modelLogin.getSalarioMensal());
-				
-					
-					
+					DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.of("pt", "BR"));
+			        symbols.setDecimalSeparator('.');
+			        symbols.setGroupingSeparator('.');
+			        DecimalFormat df = new DecimalFormat("#,##0.00", symbols);
+			     
 					request.setAttribute("salario", df.format(modelLogin.getSalarioMensal()));
 					
 					request.setAttribute("msgLoginUnico", "Usuario redirecionado!");

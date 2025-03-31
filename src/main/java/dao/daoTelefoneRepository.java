@@ -86,5 +86,19 @@ public class daoTelefoneRepository {
 
 	}
 	
+	public boolean telefoneUnico(ModelTelefone modelTelefone) throws SQLException {
+		String sql = "SELECT count(1) > 0 FROM telefone WHERE usuario_pai_id = (?) AND numero=(?)";
+		PreparedStatement sttm = connection.prepareStatement(sql);
+		sttm.setLong(1, modelTelefone.getUsuario_pai_id().getId());
+		sttm.setString(2, modelTelefone.getNumero());
+		
+		ResultSet resultSet = sttm.executeQuery();
+		
+		if(resultSet.next()) {
+			return resultSet.getBoolean(1);
+		}
+		return false;
+	}
+	
 
 }
