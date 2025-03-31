@@ -1,8 +1,13 @@
 package servlets;
 
 import java.io.IOException;
+import java.sql.Date;
 import java.sql.SQLException;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Locale;
 
 import org.apache.commons.fileupload2.jakarta.JakartaServletFileUpload;
 import org.apache.tomcat.jakartaee.commons.compress.utils.IOUtils;
@@ -31,7 +36,6 @@ public class ServletUsuarioController extends ServletGenericUtil {
 	private static final long serialVersionUID = 1L;
 
 	private daoUserRepository daoUser = new daoUserRepository();
-	private daoTelefoneRepository daoTelefone = new daoTelefoneRepository();
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
@@ -74,6 +78,13 @@ public class ServletUsuarioController extends ServletGenericUtil {
 					String idUser = request.getParameter("id");
 					ModelLogin modelLogin = daoUser.getUserId(idUser, super.getUserLogado(request));
 
+					DecimalFormat df = new DecimalFormat("#,##0.00", new DecimalFormatSymbols(Locale.of("pt", "BR")));
+					String d = df.format(modelLogin.getSalarioMensal());
+				
+					
+					
+					request.setAttribute("salario", df.format(modelLogin.getSalarioMensal()));
+					
 					request.setAttribute("msgLoginUnico", "Usuario redirecionado!");
 					request.setAttribute("modelLogin", modelLogin);
 					request.getRequestDispatcher("principal/cadastro-usuario.jsp").forward(request, response);
@@ -161,14 +172,20 @@ public class ServletUsuarioController extends ServletGenericUtil {
 			String localidade = request.getParameter("localidade");
 			String UF = request.getParameter("UF");
 			String cep = request.getParameter("cep");
+			String dataNascimentoString = request.getParameter("dataNascimento");
+			String salarioMensal = request.getParameter("salarioMensal");
+			
+			
+			Date dataNascimento = new Date(new SimpleDateFormat("dd/MM/yyyy").parse(dataNascimentoString).getTime());
 
 			Long id = idBruto != null && !idBruto.isEmpty() ? Long.parseLong(idBruto) : null;
 
 			ModelLogin modelLogin = new ModelLogin(id, name, email, login, senha, cargo, sexo, cep,
-					bairro,  logradouro,localidade, UF,  numero);
+					bairro,  logradouro,localidade, UF,  numero, dataNascimento, Double.parseDouble(salarioMensal.replace("R$", "").replace(".", "").replace(",", ".")));
 
-			 
-
+			modelLogin.setSalarioMensal(modelLogin.getSalarioMensal() * 0.010);
+			Double teste = modelLogin.getSalarioMensal();
+			
 			if (JakartaServletFileUpload.isMultipartContent(request)) {
 				Part part = request.getPart("filefoto");
 
@@ -195,17 +212,28 @@ public class ServletUsuarioController extends ServletGenericUtil {
 				request.getRequestDispatcher("principal/cadastro-usuario.jsp").forward(request, response);
 				return;
 			}
+			// para listar todos os users quando um user e atualizado
 			List<ModelLogin> usersListVer = daoUser.listaUsers(super.getUserLogado(request));
+
 			if (!modelLogin.newId()) {
-				// para listar todos os users quando um user e atualizado
-				
 				request.setAttribute("modelLogins", usersListVer);
 				msg = "Usuario atualizado com sucesso!";
+				
 			}
 			modelLogin = daoUser.createUser(modelLogin, super.getUserLogado(request));
+			
+			DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.of("pt", "BR"));
+	        symbols.setDecimalSeparator('.');
+	        symbols.setGroupingSeparator('.');
+	        DecimalFormat df = new DecimalFormat("#,##0.00", symbols);
+	      
+	        
+			
+			
 			request.setAttribute("totalPaginas", daoUser.totalPaginas(super.getUserLogado(request)));
 			// para listar todos os users quando criado um novo user
 			request.setAttribute("modelLogins", usersListVer);
+			request.setAttribute("salario",  df.format(modelLogin.getSalarioMensal()));
 
 			request.setAttribute("msg", msg);
 			request.setAttribute("modelLogin", modelLogin);

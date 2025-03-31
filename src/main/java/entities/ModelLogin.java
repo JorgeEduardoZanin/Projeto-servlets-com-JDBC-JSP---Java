@@ -1,6 +1,7 @@
 package entities;
 
 import java.io.Serializable;
+import java.sql.Date;
 
 public class ModelLogin implements Serializable {
 
@@ -12,6 +13,7 @@ public class ModelLogin implements Serializable {
 	private String email;
 	private String login;
 	private String senha;
+	private Date dataNascimento;
 	private String cargo;
 	private String sexo;
 	private String cep;
@@ -20,6 +22,7 @@ public class ModelLogin implements Serializable {
 	private String localidade;
 	private String UF;
 	private String numero;
+	private Double salarioMensal;
 
 	private String fotoUser;
 	private String extensaoFotoUser;
@@ -31,7 +34,7 @@ public class ModelLogin implements Serializable {
 	}
 
 	public ModelLogin(Long id, String name, String email, String login, String senha, String cargo, String sexo,
-			String cep, String bairro, String logradouro, String localidade, String UF, String numero) {
+			String cep, String bairro, String logradouro, String localidade, String UF, String numero, Date dataNascimento,  Double salarioMensal) {
 		
 		this.id = id;
 		this.name = name;
@@ -46,6 +49,8 @@ public class ModelLogin implements Serializable {
 		this.localidade = localidade;
 		this.UF = UF;
 		this.numero = numero;
+		this.dataNascimento = dataNascimento;
+		this.salarioMensal = salarioMensal;
 	}
 
 	public Long getId() {
@@ -174,6 +179,22 @@ public class ModelLogin implements Serializable {
 
 	public void setNumero(String numero) {
 		this.numero = numero;
+	}
+
+	public Date getDataNascimento() {
+		return dataNascimento;
+	}
+
+	public void setDataNascimento(Date dataNascimento) {
+		this.dataNascimento = dataNascimento;
+	}
+
+	public Double getSalarioMensal() {
+		return salarioMensal;
+	}
+
+	public void setSalarioMensal(Double salarioMensal) {
+		this.salarioMensal = salarioMensal;
 	}
 
 	@Override

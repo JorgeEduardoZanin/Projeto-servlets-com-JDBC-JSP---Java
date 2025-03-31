@@ -1,11 +1,17 @@
 package dao;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.sql.Date;
 import java.util.List;
+import java.util.Locale;
 
 import connection.SingleConnection;
 import entities.ModelLogin;
@@ -40,9 +46,11 @@ public class daoUserRepository {
 			String logradouro = resultSet.getString("logradouro");
 			String localidade = resultSet.getString("localidade");
 			String cep = resultSet.getString("cep");
+			Date dataNascimento = resultSet.getDate("datanascimento");
+			Double salarioMensal = resultSet.getDouble("salariomensal");
 
-			modelLogin = new ModelLogin(id, name, email, loginUser, senha, cargo, sexo, UF, bairro, numero, logradouro,
-					localidade, cep);
+			modelLogin = new ModelLogin(id, name,  email,  loginUser, senha, cargo, sexo,
+					 cep,  bairro,  logradouro,  localidade,  UF,  numero,  dataNascimento,  salarioMensal);
 			lista.add(modelLogin);
 
 		}
@@ -69,9 +77,11 @@ public class daoUserRepository {
 			String localidade = resultSet.getString("localidade");
 			String cep = resultSet.getString("cep");
 			String extensaofotouser = resultSet.getString("extensaofotouser");
-
-			modelLogin = new ModelLogin(id, name, email, loginUser, senha, cargo, sexo, UF, bairro, numero, logradouro,
-					localidade, cep);
+			Date dataNascimento = resultSet.getDate("datanascimento");
+			Double salarioMensal = resultSet.getDouble("salariomensal");
+			
+			modelLogin = new ModelLogin(id, name,  email,  loginUser, senha, cargo, sexo,
+					 cep,  bairro,  logradouro,  localidade,  UF,  numero,  dataNascimento,  salarioMensal);
 			modelLogin.setFotoUser(fotoUser);
 			modelLogin.setExtensaoFotoUser(extensaofotouser);
 		}
@@ -97,6 +107,7 @@ public class daoUserRepository {
 	public ModelLogin createUser(ModelLogin modelLogin, long userLogado) throws SQLException {
 
 		try {
+			
 			PreparedStatement sttm = null;
 
 			String login = modelLogin.getLogin();
@@ -111,11 +122,21 @@ public class daoUserRepository {
 			String numero = modelLogin.getNumero();
 			String bairro = modelLogin.getBairro();
 			String localidade = modelLogin.getLocalidade();
+			Date dataNascimento = modelLogin.getDataNascimento();
+			Double salarioMensal = modelLogin.getSalarioMensal();
+			
+			
+			
 
 			if (modelLogin.newId()) {
-				String sql = "INSERT INTO model_login(login, senha, name, email, user_id, cargo, sexo, UF, cep, logradouro, numero, bairro, localidade) VALUES (?, ?, ?, ?, ?, ?, ?, ? ,? ,?, ? , ?, ?);";
+
+				userService.calculaSalario(modelLogin);
+				salarioMensal = modelLogin.getSalarioMensal();
+				
+				String sql = "INSERT INTO model_login(login, senha, name, email, user_id, cargo, sexo, UF, cep, logradouro, numero, bairro, localidade, datanascimento, salariomensal) VALUES (?, ?, ?, ?, ?, ?, ?, ? ,? ,?, ? , ?, ?, ?, ?);";
 				sttm = connection.prepareStatement(sql);
-String stes;
+
+				
 				sttm.setString(1, login);
 				sttm.setString(2, senha);
 				sttm.setString(3, name);
@@ -129,7 +150,9 @@ String stes;
 				sttm.setString(11, numero);
 				sttm.setString(12, bairro);
 				sttm.setString(13, localidade);
-
+				sttm.setDate(14, dataNascimento);
+				sttm.setDouble(15, salarioMensal);
+				
 				sttm.execute();
 				connection.commit();
 
@@ -138,14 +161,37 @@ String stes;
 				return this.getUserGeneric(modelLogin.getLogin());
 			}
 
-			String sql = "UPDATE model_login SET login=(?), senha=(?), name=(?), email=(?), cargo=(?), sexo=(?), UF=(?), cep=(?), logradouro=(?), numero=(?), bairro=(?), localidade=(?) WHERE id=(?);";
+			DecimalFormat df = new DecimalFormat("#,##0.00", new DecimalFormatSymbols(Locale.of("pt", "BR")));
+			String salarioMensalInput = df.format(modelLogin.getSalarioMensal());
+			
+			String sqlSalario = "SELECT salariomensal FROM model_login WHERE login=?;";
+			PreparedStatement sttmSalario = connection.prepareStatement(sqlSalario);
+			sttmSalario.setString(1, login);
+			ResultSet resultSet = sttmSalario.executeQuery();
+
+			Double salarioMensalComparacao = null;
+			
+			while(resultSet.next()) {
+				salarioMensalComparacao = resultSet.getDouble("salariomensal");
+			}
+			String salarioMensalComparacaoBd = df.format(salarioMensalComparacao);
+			
+			if(!salarioMensalInput.equalsIgnoreCase(salarioMensalComparacaoBd)) {
+				userService.calculaSalario(modelLogin);
+				salarioMensal = modelLogin.getSalarioMensal();
+				
+			}
+			
+		
+			
+			String sql = "UPDATE model_login SET login=(?), senha=(?), name=(?), email=(?), cargo=(?), sexo=(?), UF=(?), cep=(?), logradouro=(?), numero=(?), bairro=(?), localidade=(?), datanascimento=(?), salariomensal=(?) WHERE id=(?);";
 			sttm = connection.prepareStatement(sql);
 
 			sttm.setString(1, login);
 			sttm.setString(2, senha);
 			sttm.setString(3, name);
 			sttm.setString(4, email);
-			sttm.setLong(13, modelLogin.getId());
+			sttm.setLong(15, modelLogin.getId());
 			sttm.setString(5, cargo);
 			sttm.setString(6, sexo);
 			sttm.setString(7, UF);
@@ -154,10 +200,12 @@ String stes;
 			sttm.setString(10, numero);
 			sttm.setString(11, bairro);
 			sttm.setString(12, localidade);
-
+			sttm.setDate(13, dataNascimento);
+			sttm.setDouble(14, salarioMensal);
+			
 			sttm.executeUpdate();
 			connection.commit();
-
+			
 			this.updateFoto(modelLogin);
 
 			return this.getUserGeneric(modelLogin.getLogin());

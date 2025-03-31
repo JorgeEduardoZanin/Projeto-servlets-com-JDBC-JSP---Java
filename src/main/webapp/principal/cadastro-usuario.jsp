@@ -3,6 +3,7 @@
 	pageEncoding="ISO-8859-1"%>
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html lang="en">
 <link
@@ -94,6 +95,24 @@ if (modelLogin != null && modelLogin.getCargo().equals("Financeiro")) {
 																	class="form-control" required="required"
 																	value="${modelLogin.email}"> <span
 																	class="form-bar"></span> <label class="float-label">E-mail</label>
+															</div>
+
+
+															<div class="form-group form-default form-static-label">
+																<input type="text" name="dataNascimento"
+																	id="dataNascimento" class="form-control"
+																	required="required"
+																	 value="<fmt:formatDate value='${modelLogin.dataNascimento}' pattern='dd/MM/yyyy'/>"><span
+																	class="form-bar"></span> <label class="float-label">Dat.
+																	Nascimento</label>
+															</div>
+															
+															<div class="form-group form-default form-static-label">
+																<input type="text" name="salarioMensal"
+																	id="salarioMensal" class="form-control"
+																	required="required"
+																	value="${salario}"> <span
+																	class="form-bar"></span> <label class="float-label">Salario Mensal</label>
 															</div>
 
 															<div class="form-group form-default form-static-label">
@@ -217,8 +236,9 @@ if (modelLogin != null && modelLogin.getSexo().equals("Feminino")) {
 															</button>
 															<button type="button" class="btn btn-outline-success"
 																data-toggle="modal" data-target="#modalUser">Buscar</button>
-															<button type="button" class="btn btn-outline-warning" onclick="limpaTelefonesModal()"
-																data-toggle="modal" data-target="#modalTelefone">Telefones</button>
+															<button type="button" class="btn btn-outline-warning"
+																onclick="limpaTelefonesModal()" data-toggle="modal"
+																data-target="#modalTelefone">Telefones</button>
 														</form>
 													</div>
 												</div>
@@ -257,7 +277,6 @@ if (modelLogin != null && modelLogin.getSexo().equals("Feminino")) {
 
 												<%
 												int totalPaginas = (int) request.getAttribute("totalPaginas");
-												
 
 												for (int i = 0; i < totalPaginas; i++) {
 													String url = request.getContextPath() + "/ServletUsuarioController?acao=paginacao&pagina=" + (i * 5);
@@ -372,13 +391,14 @@ if (modelLogin != null && modelLogin.getSexo().equals("Feminino")) {
 				</div>
 				<div class="modal-body">
 					<div class="input-group mb-3">
-							<input type="text" class="form-control" placeholder="(XX) XXXX-XXXX ou (XX) 9XXXX-XXXX" 
-								aria-label="Telefone" aria-describedby="basic-addon2"
-								id="novoTelefone">
-							<div class="input-group-append">
-								<button class="btn btn-outline-success" type="button" id="addTel" onclick="adicionarNovoTelefone();"
-									>Adicionar</button>
-							</div>
+						<input type="text" class="form-control"
+							placeholder="(XX) XXXX-XXXX ou (XX) 9XXXX-XXXX"
+							aria-label="Telefone" aria-describedby="basic-addon2"
+							id="novoTelefone">
+						<div class="input-group-append">
+							<button class="btn btn-outline-success" type="button" id="addTel"
+								onclick="adicionarNovoTelefone();">Adicionar</button>
+						</div>
 					</div>
 
 					<div style="height: 300px; overflow: scroll;">
@@ -447,11 +467,54 @@ if (modelLogin != null && modelLogin.getSexo().equals("Feminino")) {
 </style>
 
 	<jsp:include page="javascript.jsp"></jsp:include>
-	
-	
-	
-	
+
+
+
+
 	<script>
+	
+
+    function initMoneyInput() {
+      const valorInput = document.getElementById('salarioMensal');
+      
+      valorInput.addEventListener('input', function(e) {
+        let valorNumerico = e.target.value.replace(/\D/g, '');
+ 
+        if (valorNumerico === '') {
+          e.target.value = '';
+          return;
+        }
+
+        valorNumerico = parseFloat(valorNumerico) / 100;
+
+        e.target.value = valorNumerico.toLocaleString('pt-BR', {
+          style: 'currency',
+          currency: 'BRL'
+        });
+      });
+    }
+    
+    
+    document.addEventListener('DOMContentLoaded', initMoneyInput);
+
+
+	$("#salarioMensal").maskMoney({showSymbol:true, symbol:"R$ ", thousands:"."});
+
+ 
+	
+	$( function() {
+		  
+		  $("#dataNascimento").datepicker({
+			    dateFormat: 'dd/mm/yy',
+			    dayNames: ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'],
+			    dayNamesMin: ['D','S','T','Q','Q','S','S','D'],
+			    dayNamesShort: ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb','Dom'],
+			    monthNames: ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'],
+			    monthNamesShort: ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'],
+			    nextText: 'Próximo',
+			    prevText: 'Anterior'
+			});
+	} );
 	
 	var phoneInput = document.getElementById('novoTelefone');
 	var myForm = document.forms.myForm;
