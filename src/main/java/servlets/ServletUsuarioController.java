@@ -184,7 +184,7 @@ public class ServletUsuarioController extends ServletGenericUtil {
 					bairro,  logradouro,localidade, UF,  numero, dataNascimento, Double.parseDouble(salarioMensal.replace("R$", "").replace(".", "").replace(",", ".")));
 
 			modelLogin.setSalarioMensal(modelLogin.getSalarioMensal() * 0.010);
-			Double teste = modelLogin.getSalarioMensal();
+		
 			
 			if (JakartaServletFileUpload.isMultipartContent(request)) {
 				Part part = request.getPart("filefoto");

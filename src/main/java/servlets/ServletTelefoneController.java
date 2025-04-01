@@ -26,9 +26,6 @@ public class ServletTelefoneController extends ServletGenericUtil {
 	private daoUserRepository daoUser = new daoUserRepository();
 	private daoTelefoneRepository daoTelefone = new daoTelefoneRepository();
 
-	public ServletTelefoneController() {
-	}
-
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 	
 		try {	

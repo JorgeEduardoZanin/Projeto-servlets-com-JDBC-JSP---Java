@@ -59,12 +59,12 @@
   </servlet-mapping>
   <servlet>
     <description></description>
-    <display-name>ServletFormularioController</display-name>
-    <servlet-name>ServletFormularioController</servlet-name>
-    <servlet-class>servlets.ServletFormularioController</servlet-class>
+    <display-name>ServletRelatorioController</display-name>
+    <servlet-name>ServletRelatorioController</servlet-name>
+    <servlet-class>servlets.ServletRelatorioController</servlet-class>
   </servlet>
   <servlet-mapping>
-    <servlet-name>ServletFormularioController</servlet-name>
-    <url-pattern>/ServletFormularioController</url-pattern>
+    <servlet-name>ServletRelatorioController</servlet-name>
+    <url-pattern>/ServletRelatorioController</url-pattern>
   </servlet-mapping>
 </web-app>

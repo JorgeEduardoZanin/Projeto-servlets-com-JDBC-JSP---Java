@@ -1,6 +1,9 @@
+<%@page import="entities.ModelLogin"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
 
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -35,55 +38,57 @@
 													<div class="card-block">
 														<h4 class="sub-title">Dados do usuário</h4>
 														<form class="form-material"
-															action="<%=request.getContextPath()%>/ServletRelatorioController?acao=criarForm"
-															method="post" id="formUser">
+															action="<%=request.getContextPath()%>/ServletRelatorioController"
+															method="get" id="formUser">
 
 															<div class="form-row">
 																<div class="form-group col-md-6">
 																	<label >Data Inicial</label> <input 
-																		type="text" class="form-control" id="dataInicial">
+																		type="text" class="form-control" id="dataInicial" name="dataInicial" value="${dataInicial}">
 																</div>
 																<div class="form-group col-md-6">
 																	<label for="inputEmail4">Data Final</label> <input
 																		type="text" class="form-control"
-																		id="dataFinal">
+																		id="dataFinal"  name="dataFinal" value="${dataFinal}">
 																</div>
 															</div>
-															<div class="form-group">
-																<label for="inputAddress">Address</label> <input
-																	type="text" class="form-control" id="inputAddress"
-																	placeholder="1234 Main St">
-															</div>
-															<div class="form-group">
-																<label for="inputAddress2">Address 2</label> <input
-																	type="text" class="form-control" id="inputAddress2"
-																	placeholder="Apartment, studio, or floor">
-															</div>
-															<div class="form-row">
-																<div class="form-group col-md-6">
-																	<label for="inputCity">City</label> <input type="text"
-																		class="form-control" id="inputCity">
-																</div>
-																<div class="form-group col-md-4">
-																	<label for="inputState">State</label> <select
-																		id="inputState" class="form-control">
-																		<option selected>Choose...</option>
-																		<option>...</option>
-																	</select>
-																</div>
-																<div class="form-group col-md-2">
-																	<label for="inputZip">Zip</label> <input type="text"
-																		class="form-control" id="inputZip">
-																</div>
-															</div>
+															 <input type="hidden" name="acao" value="criarRelatorio">
 
-															<button type="button" class="btn btn-outline-success">Imprimir relatório</button>
+															<button type="submit" class="btn btn-outline-success">Imprimir relatório</button>
 														</form>
 													</div>
 												</div>
 											</div>
 
 										</div>
+										<div style="height: 300px; overflow: scroll;">
+											<table class="table" id="listaUsers">
+												<thead>
+													<tr>
+														<th scope="col">Nome</th>
+														<th scope="col">Salario Mensal</th>
+														<th scope="col">Cargo</th>
+														<th scope="col">Dat. Nascimento</th>
+														<th scope="col">E-mail</th>
+
+													</tr>
+												</thead>
+												<tbody>
+													<c:forEach items="${listaUsers}" var="lu">
+														<tr>
+															<td><c:out value="${lu.name}"></c:out></td>
+															<td><c:out value="${lu.salarioMensal}"></c:out></td>
+															<td><c:out value="${lu.cargo}"></c:out></td>
+															<td class="date-cell"><c:out value="${lu.dataNascimento}" /></td>
+															<td><c:out value="${lu.email}"></c:out></td>
+
+														</tr>
+
+													</c:forEach>
+												</tbody>
+											</table>
+										</div>
+										
 									</div>
 									<!-- Page-body end -->
 								</div>
@@ -99,6 +104,25 @@
 
 	<jsp:include page="javascript.jsp"></jsp:include>
 	<script>
+	
+	 window.addEventListener('DOMContentLoaded', function() {
+		  
+		    var dateCells = document.querySelectorAll('.date-cell');
+		    
+		    dateCells.forEach(function(cell) {
+		      var dateStr = cell.textContent.trim();
+		      
+		      if (dateStr) {
+		     
+		        var parts = dateStr.split("-");
+		        if (parts.length === 3) {
+		          
+		          var formattedDate = parts[2] + "/" + parts[1] + "/" + parts[0];
+		          cell.textContent = formattedDate;
+		        }
+		      }
+		    });
+		  });
 	
 	$( function() {
 		  
