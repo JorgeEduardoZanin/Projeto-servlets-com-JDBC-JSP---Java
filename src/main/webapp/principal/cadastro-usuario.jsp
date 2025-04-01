@@ -473,6 +473,31 @@ if (modelLogin != null && modelLogin.getSexo().equals("Feminino")) {
 
 	<script>
 	
+	
+	
+	document.getElementById('dataNascimento').addEventListener('input', function(e) {
+		  let input = e.target.value;
+		  
+		
+		  let digits = input.replace(/\D/g, '');
+		  
+		
+		  if(digits.length > 8) {
+		    digits = digits.substring(0,8);
+		  }
+		  
+		
+		  if(digits.length > 4) {
+		   
+		    digits = digits.substring(0,2) + '/' + digits.substring(2,4) + '/' + digits.substring(4);
+		  } else if(digits.length > 2) {
+		  
+		    digits = digits.substring(0,2) + '/' + digits.substring(2);
+		  }
+		  
+		
+		  e.target.value = digits;
+		});
 
     function initMoneyInput() {
       const valorInput = document.getElementById('salarioMensal');
