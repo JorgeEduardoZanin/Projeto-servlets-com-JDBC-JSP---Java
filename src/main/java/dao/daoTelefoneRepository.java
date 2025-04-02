@@ -43,7 +43,6 @@ public class daoTelefoneRepository {
 		return telefoneUser;
 	}
 	
-	
 	public void createTelefone(ModelTelefone modelTelefone) throws SQLException {
 
 		String numero = modelTelefone.getNumero();
@@ -69,6 +68,17 @@ public class daoTelefoneRepository {
 		String sql = "SELECT * FROM telefone WHERE usuario_pai_id = (?) ORDER BY id ASC;";
 		PreparedStatement sttm = connection.prepareStatement(sql);
 		sttm.setLong(1, Long.parseLong(userPaiId));
+		ResultSet resultSet = sttm.executeQuery();
+		
+		return this.resultSet(resultSet);
+	
+	}
+	
+	
+	public List<ModelTelefone> listaTelRelatorio(Long userPaiId) throws Exception {
+		String sql = "SELECT * FROM telefone WHERE usuario_pai_id = (?) ORDER BY id ASC;";
+		PreparedStatement sttm = connection.prepareStatement(sql);
+		sttm.setLong(1, userPaiId);
 		ResultSet resultSet = sttm.executeQuery();
 		
 		return this.resultSet(resultSet);

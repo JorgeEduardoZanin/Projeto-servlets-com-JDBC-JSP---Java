@@ -42,7 +42,13 @@ public class ServletTelefoneController extends ServletGenericUtil {
 						String idUserTel = request.getParameter("idUser");
 			
 						List<ModelTelefone> listaTelefoneJson = daoTelefone.getTelefone(idUserTel);
-		
+						
+						if(listaTelefoneJson.isEmpty() || listaTelefoneJson == null) {
+							response.setContentType("application/json");
+						    response.setCharacterEncoding("UTF-8");
+						    response.getWriter().write(", o usuário em questão não possui telefones cadastrados.");
+							return;
+						}
 						// usando a biblioteca para json jackson
 						ObjectMapper mapperTel = new ObjectMapper();
 						String jsonTel = mapperTel.writeValueAsString(listaTelefoneJson);
