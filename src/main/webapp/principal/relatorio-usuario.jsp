@@ -53,10 +53,15 @@
 																		name="dataFinal" value="${dataFinal}">
 																</div>
 															</div>
-															<input type="hidden" name="acao" value="criarRelatorio">
+															<input type="hidden" name="acao"
+																id="acaoRelatorioImprimirTipo" value="criarRelatorio">
 
-															<button type="submit" class="btn btn-outline-success">Imprimir
+															<button type="button" onclick="imprimirHtmlI()"
+																class="btn btn-outline-success">Imprimir
 																relatório</button>
+															<button type="button" onclick="imprimirPdf()"
+																class="btn btn-outline-success">Imprimir PDF
+																</button>
 														</form>
 													</div>
 												</div>
@@ -79,20 +84,18 @@
 												<tbody>
 													<c:forEach items="${listaUsers}" var="lu">
 														<tr>
-																
+
 															<td><c:out value="${lu.name}"></c:out></td>
 															<td><c:out value="${lu.salarioMensal}"></c:out></td>
 															<td><c:out value="${lu.cargo}"></c:out></td>
-															<td class="date-cell"><c:out value="${lu.dataNascimento}" /></td>
+															<td class="date-cell"><c:out
+																	value="${lu.dataNascimento}" /></td>
 															<td><c:out value="${lu.email}"></c:out></td>
 															<td>
-																 <button type="button" class="btn btn-outline-warning"
-                    data-userid="${lu.id}"
-                    onclick="abreModalTelefone(this)"
-                    data-toggle="modal"
-                    data-target="#modalTelefone">
-                Telefones
-            </button>
+																<button type="button" class="btn btn-outline-warning"
+																	data-userid="${lu.id}"
+																	onclick="abreModalTelefone(this)" data-toggle="modal"
+																	data-target="#modalTelefone">Telefones</button>
 															</td>
 
 														</tr>
@@ -132,13 +135,13 @@
 								<tr>
 									<th scope="col">ID</th>
 									<th scope="col">Telefone</th>
-									
+
 								</tr>
-								
-								
+
+
 							</thead>
 							<tbody>
-							
+
 							</tbody>
 						</table>
 					</div>
@@ -157,6 +160,17 @@
 	<jsp:include page="javascript.jsp"></jsp:include>
 	<script>
 	
+	
+	function imprimirHtml(){
+		document.getElementById("acaoRelatorioImprimirTipo").value = 'criarRelatorio';
+		$("#formUser").submit();
+	}
+	
+	function imprimirPdf(){
+		document.getElementById("acaoRelatorioImprimirTipo").value = 'ImprimirRelatorioPdf';
+		$("#formUser").submit();
+	}
+	
 	function limpaTelefonesModal(){
 		$('#resultTelList > tbody > tr').remove();
 	}
@@ -168,28 +182,39 @@
 	    if(idUser != null && idUser != '' && idUser.trim()!=''){
 	    	$.ajax({
 	    		method:"get",
-	    		url:"<%=request.getContextPath()%>/ServletTelefoneController",
-	    		data:"idUser="+idUser+"&acao=listarTelefone",
-	    		success: function(response) {    					
-					var jsonTel = JSON.parse(response);
-									
-					$('#resultTelList > tbody > tr').remove();
-		   			$('#paginacaoUserAjaxModal > li').remove();			
-		   			for(var i=0; i < jsonTel.length; i++){
-		   			 $('#resultTelList > tbody').append('<tr> <td>'+ jsonTel[i].id+'</td> <td>'+ jsonTel[i].numero+'</td> </tr>'); 
-		   			}
-		   			
-				}
-	    	}).fail(function(xhr, status, errorThrown){
-	    		setTimeout(function () {
-	                alert("Erro ao carregar os dados: " + xhr.responseText);
-	            }, 500);
-				
-			});
-	    }
-	   
-	}
-	
+	    		url:"<%=request.getContextPath()%>
+		/ServletTelefoneController",
+									data : "idUser=" + idUser
+											+ "&acao=listarTelefone",
+									success : function(response) {
+										var jsonTel = JSON.parse(response);
+
+										$('#resultTelList > tbody > tr')
+												.remove();
+										$('#paginacaoUserAjaxModal > li')
+												.remove();
+										for (var i = 0; i < jsonTel.length; i++) {
+											$('#resultTelList > tbody').append(
+													'<tr> <td>' + jsonTel[i].id
+															+ '</td> <td>'
+															+ jsonTel[i].numero
+															+ '</td> </tr>');
+										}
+
+									}
+								}).fail(
+								function(xhr, status, errorThrown) {
+									setTimeout(function() {
+										s
+										alert("Erro ao carregar os dados: "
+												+ xhr.responseText);
+									}, 500);
+
+								});
+			}
+
+		}
+
 		window.addEventListener('DOMContentLoaded', function() {
 
 			var dateCells = document.querySelectorAll('.date-cell');

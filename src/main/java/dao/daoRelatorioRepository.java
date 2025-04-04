@@ -61,11 +61,12 @@ public class daoRelatorioRepository {
 	}
 	
 	
-	public List<ModelLogin> listaUsuarioPorData(Date dataInicial, Date dataFinal) throws SQLException{
-		String sql = "SELECT * FROM model_login WHERE datanascimento BETWEEN ? AND ? ORDER BY id ASC";
+	public List<ModelLogin> listaUsuarioPorData(Date dataInicial, Date dataFinal, Long userLogado) throws SQLException{
+		String sql = "SELECT * FROM model_login WHERE useradmin = false AND datanascimento BETWEEN ? AND ? AND user_id =(?) ORDER BY id ASC";
 		PreparedStatement sttm = connection.prepareStatement(sql);
 		sttm.setDate(1, dataInicial);
 		sttm.setDate(2, dataFinal);
+		sttm.setLong(3, userLogado);
 		
 		ResultSet resultSet = sttm.executeQuery();
 		

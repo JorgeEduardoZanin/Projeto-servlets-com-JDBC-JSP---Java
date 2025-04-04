@@ -49,6 +49,7 @@
 					data-i18n="nav.dash.main">Dashboard</span> <span
 					class="pcoded-mcaret"></span>
 			</a></li>
+			<c:if test="${cargo == 'Administrador'}">
 			<li class="pcoded-hasmenu"><a href="javascript:void(0)"
 				class="waves-effect waves-dark"> <span class="pcoded-micon"><i
 						class="ti-layout-grid2-alt"></i></span> <span class="pcoded-mtext"
@@ -56,7 +57,7 @@
 					class="pcoded-mcaret"></span>
 			</a>
 				<ul class="pcoded-submenu">
-					<c:if test="${cargo == 'Administrador'}">
+					
 						<li class=" "><a
 							href="<%=request.getContextPath()%>/ServletUsuarioController?acao=listaUsers"
 							class="waves-effect waves-dark"> <span class="pcoded-micon"><i

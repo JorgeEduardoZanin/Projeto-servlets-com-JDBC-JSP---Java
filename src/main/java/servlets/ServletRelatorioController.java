@@ -29,11 +29,10 @@ public class ServletRelatorioController extends ServletGenericUtil {
 				switch (acao.toLowerCase()) {
 
 				case "criarrelatorio":
+					
 					String dataInicialString = request.getParameter("dataInicial");
 					String dataFinalString = request.getParameter("dataFinal");
-					
-					
-					
+		
 					if (dataFinalString == null || dataFinalString.isEmpty() && dataInicialString == null || dataInicialString.isEmpty()) {
 
 						List<ModelLogin> listaUsuarios = daoRelatorio.listaUsuariosRelatorio(super.getUserLogado(request));
@@ -45,12 +44,21 @@ public class ServletRelatorioController extends ServletGenericUtil {
 					Date dataInicial = new Date(new SimpleDateFormat("dd/MM/yyyy").parse(dataInicialString).getTime());
 					Date dataFinal = new Date(new SimpleDateFormat("dd/MM/yyyy").parse(dataFinalString).getTime());
 					
-					List<ModelLogin> listaUsuariosPorData = daoRelatorio.listaUsuarioPorData(dataInicial, dataFinal);
+					List<ModelLogin> listaUsuariosPorData = daoRelatorio.listaUsuarioPorData(dataInicial, dataFinal, super.getUserLogado(request));
 					request.setAttribute("listaUsers", listaUsuariosPorData);
 					request.setAttribute("dataInicial", dataInicialString);
 					request.setAttribute("dataFinal", dataFinalString);
 					request.getRequestDispatcher("principal/relatorio-usuario.jsp").forward(request, response);
 					break;
+					
+				case "Imprimirrelatoriopdf":
+					
+					String dataInicialStringPdf = request.getParameter("dataInicial");
+					String dataFinalStringPdf = request.getParameter("dataFinal");
+					 List<ModelLogin> listModel = null;
+					
+					break;
+					
 				default:
 					request.getRequestDispatcher("principal/relatorio-usuario.jsp").forward(request, response);
 					break;

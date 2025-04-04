@@ -14,6 +14,8 @@ import org.apache.tomcat.jakartaee.commons.compress.utils.IOUtils;
 import org.apache.tomcat.util.codec.binary.Base64;
 
 import jakarta.servlet.http.Part;
+import utilitarios.DecimalFormats;
+
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -36,12 +38,12 @@ public class ServletUsuarioController extends ServletGenericUtil {
 	private static final long serialVersionUID = 1L;
 
 	private daoUserRepository daoUser = new daoUserRepository();
+	private DecimalFormats formatador = new DecimalFormats();
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
 		try {
-
 			String acao = request.getParameter("acao");
 			String idBruto = request.getParameter("id");
 			Long id = idBruto != null && !idBruto.isEmpty() ? Long.parseLong(idBruto) : null;
@@ -77,13 +79,8 @@ public class ServletUsuarioController extends ServletGenericUtil {
 
 					String idUser = request.getParameter("id");
 					ModelLogin modelLogin = daoUser.getUserId(idUser, super.getUserLogado(request));
-
-					DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.of("pt", "BR"));
-			        symbols.setDecimalSeparator('.');
-			        symbols.setGroupingSeparator('.');
-			        DecimalFormat df = new DecimalFormat("#,##0.00", symbols);
 			     
-					request.setAttribute("salario", df.format(modelLogin.getSalarioMensal()));
+					request.setAttribute("salario", formatador.formataSalario(modelLogin));
 					
 					request.setAttribute("msgLoginUnico", "Usuario redirecionado!");
 					request.setAttribute("modelLogin", modelLogin);
@@ -100,6 +97,7 @@ public class ServletUsuarioController extends ServletGenericUtil {
 					break;
 
 				case "downloadfoto":
+					
 					modelLogin = daoUser.getUserId(idBruto, super.getUserLogado(request));
 
 					if (modelLogin.getExtensaoFotoUser() != null && !modelLogin.getExtensaoFotoUser().isEmpty()) {
@@ -108,11 +106,11 @@ public class ServletUsuarioController extends ServletGenericUtil {
 								"attachment;filename=arquivo." + modelLogin.getExtensaoFotoUser());
 						new Base64();
 						response.getOutputStream().write(Base64.decodeBase64(modelLogin.getFotoUser().split("\\,")[1]));
-
 					}
 					break;
 
 				case "paginacao":
+					
 					Integer offset = Integer.parseInt(request.getParameter("pagina"));
 
 					List<ModelLogin> modelLoginList = daoUser.listaUsersPaginacao(super.getUserLogado(request), offset);
@@ -157,7 +155,6 @@ public class ServletUsuarioController extends ServletGenericUtil {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		try {		
-			
 			String msg = "Usuario criado com sucesso!";
 			String idBruto = request.getParameter("id");
 			String name = request.getParameter("name");
@@ -175,7 +172,6 @@ public class ServletUsuarioController extends ServletGenericUtil {
 			String dataNascimentoString = request.getParameter("dataNascimento");
 			String salarioMensal = request.getParameter("salarioMensal");
 			
-			
 			Date dataNascimento = new Date(new SimpleDateFormat("dd/MM/yyyy").parse(dataNascimentoString).getTime());
 
 			Long id = idBruto != null && !idBruto.isEmpty() ? Long.parseLong(idBruto) : null;
@@ -184,7 +180,6 @@ public class ServletUsuarioController extends ServletGenericUtil {
 					bairro,  logradouro,localidade, UF,  numero, dataNascimento, Double.parseDouble(salarioMensal.replace("R$", "").replace(".", "").replace(",", ".")));
 
 			modelLogin.setSalarioMensal(modelLogin.getSalarioMensal() * 0.010);
-		
 			
 			if (JakartaServletFileUpload.isMultipartContent(request)) {
 				Part part = request.getPart("filefoto");
@@ -217,23 +212,14 @@ public class ServletUsuarioController extends ServletGenericUtil {
 
 			if (!modelLogin.newId()) {
 				request.setAttribute("modelLogins", usersListVer);
-				msg = "Usuario atualizado com sucesso!";
-				
+				msg = "Usuario atualizado com sucesso!";	
 			}
 			modelLogin = daoUser.createUser(modelLogin, super.getUserLogado(request));
-			
-			DecimalFormatSymbols symbols = new DecimalFormatSymbols(Locale.of("pt", "BR"));
-	        symbols.setDecimalSeparator('.');
-	        symbols.setGroupingSeparator('.');
-	        DecimalFormat df = new DecimalFormat("#,##0.00", symbols);
-	      
-	        
-			
 			
 			request.setAttribute("totalPaginas", daoUser.totalPaginas(super.getUserLogado(request)));
 			// para listar todos os users quando criado um novo user
 			request.setAttribute("modelLogins", usersListVer);
-			request.setAttribute("salario",  df.format(modelLogin.getSalarioMensal()));
+			request.setAttribute("salario", formatador.formataSalario(modelLogin));
 
 			request.setAttribute("msg", msg);
 			request.setAttribute("modelLogin", modelLogin);
