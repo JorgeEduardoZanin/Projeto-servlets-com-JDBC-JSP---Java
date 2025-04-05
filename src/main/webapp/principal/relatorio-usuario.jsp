@@ -56,12 +56,11 @@
 															<input type="hidden" name="acao"
 																id="acaoRelatorioImprimirTipo" value="criarRelatorio">
 
-															<button type="button" onclick="imprimirHtmlI()"
+															<button type="button" onclick="imprimirHtml();"
 																class="btn btn-outline-success">Imprimir
 																relatório</button>
-															<button type="button" onclick="imprimirPdf()"
-																class="btn btn-outline-success">Imprimir PDF
-																</button>
+															<button type="button" onclick="imprimirPdf();"
+																class="btn btn-outline-success">Imprimir PDF</button>
 														</form>
 													</div>
 												</div>
@@ -161,13 +160,16 @@
 	<script>
 	
 	
+	
 	function imprimirHtml(){
+		alert("fe");
 		document.getElementById("acaoRelatorioImprimirTipo").value = 'criarRelatorio';
 		$("#formUser").submit();
 	}
 	
 	function imprimirPdf(){
-		document.getElementById("acaoRelatorioImprimirTipo").value = 'ImprimirRelatorioPdf';
+		alert("fe");
+		document.getElementById("acaoRelatorioImprimirTipo").value = 'imprimirRelatorioPdf';
 		$("#formUser").submit();
 	}
 	
@@ -182,8 +184,7 @@
 	    if(idUser != null && idUser != '' && idUser.trim()!=''){
 	    	$.ajax({
 	    		method:"get",
-	    		url:"<%=request.getContextPath()%>
-		/ServletTelefoneController",
+	    		url:"<%=request.getContextPath()%>/ServletTelefoneController",
 									data : "idUser=" + idUser
 											+ "&acao=listarTelefone",
 									success : function(response) {

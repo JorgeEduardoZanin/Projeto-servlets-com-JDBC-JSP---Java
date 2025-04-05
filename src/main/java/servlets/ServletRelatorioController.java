@@ -5,10 +5,14 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import utilitarios.ReportUtil;
+
 import java.io.IOException;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.List;
+
+import org.apache.tomcat.util.codec.binary.Base64;
 
 import dao.daoRelatorioRepository;
 import entities.ModelLogin;
@@ -51,11 +55,24 @@ public class ServletRelatorioController extends ServletGenericUtil {
 					request.getRequestDispatcher("principal/relatorio-usuario.jsp").forward(request, response);
 					break;
 					
-				case "Imprimirrelatoriopdf":
+				case "imprimirrelatoriopdf":
 					
 					String dataInicialStringPdf = request.getParameter("dataInicial");
 					String dataFinalStringPdf = request.getParameter("dataFinal");
-					 List<ModelLogin> listModel = null;
+					List<ModelLogin> listModelLogin = null;
+					
+					if (dataInicialStringPdf == null || dataInicialStringPdf.isEmpty() && dataFinalStringPdf == null || dataFinalStringPdf.isEmpty()) {
+						
+						listModelLogin = daoRelatorio.listaUsuariosRelatorio(super.getUserLogado(request));
+					}else{
+						Date dataInicialPdf = new Date(new SimpleDateFormat("dd/MM/yyyy").parse(dataInicialStringPdf).getTime());
+						Date dataFinalPdf = new Date(new SimpleDateFormat("dd/MM/yyyy").parse(dataFinalStringPdf).getTime());
+						listModelLogin = daoRelatorio.listaUsuarioPorData(dataInicialPdf, dataFinalPdf, super.getUserLogado(request));
+					}
+					
+					byte[] relatorio = new ReportUtil().geraRelatorioPDF(listModelLogin, "relatorio-user-jsp", request.getServletContext());
+					response.setHeader("Content-Disposition","attachment;filename=arquivo.pdf");
+					response.getOutputStream().write(relatorio);
 					
 					break;
 					
