@@ -61,6 +61,8 @@
 																relatório</button>
 															<button type="button" onclick="imprimirPdf();"
 																class="btn btn-outline-success">Imprimir PDF</button>
+																<button type="button" onclick="imprimirExcel();"
+																class="btn btn-outline-success">Imprimir Excel</button>
 														</form>
 													</div>
 												</div>
@@ -159,16 +161,17 @@
 	<jsp:include page="javascript.jsp"></jsp:include>
 	<script>
 	
-	
+	function imprimirExcel(){
+		document.getElementById("acaoRelatorioImprimirTipo").value = 'imprimirRelatorioExcel';
+		$("#formUser").submit();
+	}
 	
 	function imprimirHtml(){
-		alert("fe");
 		document.getElementById("acaoRelatorioImprimirTipo").value = 'criarRelatorio';
 		$("#formUser").submit();
 	}
 	
 	function imprimirPdf(){
-		alert("fe");
 		document.getElementById("acaoRelatorioImprimirTipo").value = 'imprimirRelatorioPdf';
 		$("#formUser").submit();
 	}

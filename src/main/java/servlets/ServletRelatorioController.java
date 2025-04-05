@@ -7,9 +7,11 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import utilitarios.ReportUtil;
 
+import java.io.File;
 import java.io.IOException;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
+import java.util.HashMap;
 import java.util.List;
 
 import org.apache.tomcat.util.codec.binary.Base64;
@@ -56,6 +58,7 @@ public class ServletRelatorioController extends ServletGenericUtil {
 					break;
 					
 				case "imprimirrelatoriopdf":
+				case "imprimirrelatorioexcel":
 					
 					String dataInicialStringPdf = request.getParameter("dataInicial");
 					String dataFinalStringPdf = request.getParameter("dataFinal");
@@ -70,8 +73,21 @@ public class ServletRelatorioController extends ServletGenericUtil {
 						listModelLogin = daoRelatorio.listaUsuarioPorData(dataInicialPdf, dataFinalPdf, super.getUserLogado(request));
 					}
 					
-					byte[] relatorio = new ReportUtil().geraRelatorioPDF(listModelLogin, "relatorio-user-jsp", request.getServletContext());
-					response.setHeader("Content-Disposition","attachment;filename=arquivo.pdf");
+					HashMap<String, Object> parametros = new HashMap<String,Object>();	
+					parametros.put("PARAM_SUB_REPORT", request.getServletContext().getRealPath("relatorio") + File.separator);
+					
+					byte[] relatorio = null;
+					String extensao = "";
+					
+					if(acao.equalsIgnoreCase("imprimirrelatoriopdf")) {
+						relatorio = new ReportUtil().geraRelatorioPDF(listModelLogin, "relatorio-user-jsp", parametros, request.getServletContext());
+						extensao = "pdf";
+					}else if(acao.equalsIgnoreCase("imprimirrelatorioexcel")) {
+						relatorio = new ReportUtil().geraRelatorioExcel(listModelLogin, "relatorio-user-jsp", parametros, request.getServletContext());
+						extensao = "xls";
+					}
+					
+					response.setHeader("Content-Disposition","attachment;filename=arquivo." + extensao);
 					response.getOutputStream().write(relatorio);
 					
 					break;

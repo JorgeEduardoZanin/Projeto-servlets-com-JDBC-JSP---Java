@@ -4,13 +4,13 @@ import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 import connection.SingleConnection;
 import entities.ModelLogin;
-import net.bytebuddy.dynamic.scaffold.MethodRegistry.Prepared;
+import entities.ModelTelefone;
+
 
 public class daoRelatorioRepository {
 	
@@ -20,9 +20,11 @@ public class daoRelatorioRepository {
 		connection = SingleConnection.getConnection();
 	}
 	
-	public List<ModelLogin> resultSetList(ResultSet resultSet) throws SQLException {
+	public List<ModelLogin> resultSetList(ResultSet resultSet) throws Exception {
 		ModelLogin modelLogin = new ModelLogin();
 		List<ModelLogin> lista = new ArrayList<ModelLogin>();
+		
+		
 
 		while (resultSet.next()) {
 			String name = resultSet.getString("name");
@@ -41,8 +43,12 @@ public class daoRelatorioRepository {
 			Date dataNascimento = resultSet.getDate("datanascimento");
 			Double salarioMensal = resultSet.getDouble("salariomensal");
 
+			List<ModelTelefone> listTel = new daoTelefoneRepository().listaTelRelatorio(id);
+			
 			modelLogin = new ModelLogin(id, name,  email,  loginUser, senha, cargo, sexo,
 					 cep,  bairro,  logradouro,  localidade,  UF,  numero,  dataNascimento,  salarioMensal);
+			
+			modelLogin.setListaTel(listTel);
 			lista.add(modelLogin);
 
 		}
@@ -60,7 +66,7 @@ public class daoRelatorioRepository {
 	}
 	
 	
-	public List<ModelLogin> listaUsuarioPorData(Date dataInicial, Date dataFinal, Long userLogado) throws SQLException{
+	public List<ModelLogin> listaUsuarioPorData(Date dataInicial, Date dataFinal, Long userLogado) throws Exception{
 		String sql = "SELECT * FROM model_login WHERE useradmin = false AND datanascimento BETWEEN ? AND ? ORDER BY id ASC";
 		PreparedStatement sttm = connection.prepareStatement(sql);
 		sttm.setDate(1, dataInicial);
