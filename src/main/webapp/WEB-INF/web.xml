@@ -67,4 +67,14 @@
     <servlet-name>ServletRelatorioController</servlet-name>
     <url-pattern>/ServletRelatorioController</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>ServletGraficoController</display-name>
+    <servlet-name>ServletGraficoController</servlet-name>
+    <servlet-class>servlets.ServletGraficoController</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ServletGraficoController</servlet-name>
+    <url-pattern>/ServletGraficoController</url-pattern>
+  </servlet-mapping>
 </web-app>

@@ -49,6 +49,7 @@ public class ReportUtil implements Serializable {
 		
 	}
 	
+@SuppressWarnings("deprecation")
 public byte[] geraRelatorioExcel(List listaDados, String nomeRelatorio, HashMap<String, Object> hashParametros, ServletContext servletContext) throws JRException {
 		
 		//cria a lista de dados que vem do sql 
@@ -56,7 +57,8 @@ public byte[] geraRelatorioExcel(List listaDados, String nomeRelatorio, HashMap<
 		                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               
 		String caminhoJasper = servletContext.getRealPath("relatorio") + File.separator + nomeRelatorio + ".jasper";
 		
-		JasperPrint impressoraJasper = JasperFillManager.fillReport(caminhoJasper, new HashMap<>(), jrbCollection);
+		JasperPrint impressoraJasper = JasperFillManager.fillReport(caminhoJasper, hashParametros, jrbCollection);
+		
 		
 		JRExporter exporter = new JRXlsExporter();
 		
