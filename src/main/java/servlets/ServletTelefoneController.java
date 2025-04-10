@@ -1,8 +1,6 @@
 package servlets;
 
 import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -31,8 +29,6 @@ public class ServletTelefoneController extends ServletGenericUtil {
 		try {	
 		
 			String acao = request.getParameter("acao");
-			String idBruto = request.getParameter("id");
-			Long id = idBruto != null && !idBruto.isEmpty() ? Long.parseLong(idBruto) : null;
 	
 			if (acao != null && !acao.isEmpty()) {
 	

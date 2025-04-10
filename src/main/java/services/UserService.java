@@ -1,10 +1,8 @@
 package services;
 
-import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import connection.SingleConnection;
 import entities.ModelLogin;
 
 public class UserService {

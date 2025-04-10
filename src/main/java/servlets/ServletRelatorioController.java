@@ -1,8 +1,6 @@
 package servlets;
 
 import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import utilitarios.ReportUtil;
@@ -13,8 +11,6 @@ import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
-
-import org.apache.tomcat.util.codec.binary.Base64;
 
 import dao.daoRelatorioRepository;
 import entities.ModelLogin;

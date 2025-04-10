@@ -3,11 +3,9 @@ package servlets;
 import java.io.IOException;
 import java.sql.Date;
 import java.sql.SQLException;
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
+
 import java.text.SimpleDateFormat;
 import java.util.List;
-import java.util.Locale;
 
 import org.apache.commons.fileupload2.jakarta.JakartaServletFileUpload;
 import org.apache.tomcat.jakartaee.commons.compress.utils.IOUtils;
@@ -16,22 +14,15 @@ import org.apache.tomcat.util.codec.binary.Base64;
 import jakarta.servlet.http.Part;
 import utilitarios.DecimalFormats;
 
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import dao.daoTelefoneRepository;
 import dao.daoUserRepository;
 import entities.ModelLogin;
-import entities.ModelTelefone;
-import filter.FilterAutenticacao;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
-import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 
 @MultipartConfig
 public class ServletUsuarioController extends ServletGenericUtil {

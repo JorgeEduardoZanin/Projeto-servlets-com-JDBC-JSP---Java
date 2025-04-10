@@ -1,13 +1,11 @@
 package dao;
 
-import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.sql.Date;
 import java.util.List;
@@ -15,8 +13,6 @@ import java.util.Locale;
 
 import connection.SingleConnection;
 import entities.ModelLogin;
-import entities.ModelTelefone;
-import net.bytebuddy.dynamic.scaffold.MethodRegistry.Prepared;
 import services.UserService;
 
 public class daoUserRepository {
