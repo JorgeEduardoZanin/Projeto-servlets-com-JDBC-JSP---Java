@@ -40,7 +40,7 @@
 											<div class="card-block">
 												<h4 class="sub-title">Dados do usuário</h4>
 											
-											<canvas id="myChart"></canvas>
+										<canvas id="myChart" width="400" height="150"></canvas>
 											</div>
 											</div>
 											</div>

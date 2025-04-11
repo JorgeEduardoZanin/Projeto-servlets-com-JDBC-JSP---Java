@@ -19,7 +19,7 @@
                           </div>
                       </div>
                       <a href="index.html">
-                          <img width="70px" style="margin-left:20px; border-radius:10px; " class="img-fluid logo-empresa" src="<%= request.getContextPath() %>/assets/logoempresa.png" alt="Theme-Logo" />
+                          
                       </a>
                       <a class="mobile-options waves-effect waves-light">
                           <i class="ti-more"></i>
